@@ -35,7 +35,8 @@ public class CalendarDay {
         return date;
     }
 
-    public ScheduleEvent findEventOnday(int duration){
+    //Note: eventDuration might be better represented as a different data type
+    public ScheduleEvent findTimeInDay(int duration){
         /*TODO: This method should find an open block of time on the current day
         *and create an event from that block.
         * If no such time slot is available, find a way to report failure.
