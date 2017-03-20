@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -25,9 +28,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
 
                 //Note: This stuff is testing event creation. After the click, results are shown.
-                //TODO: that thing I just wrote above
+                Calendar start = new GregorianCalendar(2017, 3, 10);
+                Calendar end = new GregorianCalendar(2017, 3, 17);
 
-
+                ScheduleEvent event =
+                        DataManager.Instance().getUser().getSchedule().findTimeInSchedule(start, end, 60);
+                event.changeName("New Event");
+                DataManager.Instance().getUser().getSchedule().addEvent(event);
             }
         });
     }

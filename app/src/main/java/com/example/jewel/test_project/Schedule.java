@@ -34,14 +34,54 @@ public class Schedule {
         events.remove(event);
     }
 
-    private void fillCalendar(){
-        //TODO: This method creates CalendarDay(s) as needed to perform calculations
+    /***
+     * Returnsa list of CalendarDays, with each day being populated with blocks
+     * created from the events in this schedule at the time this method is called
+     * @param windowStart
+     * @param windowEnd
+     * @return
+     */
+    private List<CalendarDay> fillDaysInWindow(Calendar windowStart, Calendar windowEnd){
+        //Create a collection of calendar days, from the start to end, INCLUSIVE
+        List<CalendarDay> daysInWindow = new ArrayList<>();
+
+        Calendar temp = (Calendar)windowStart.clone();
+
+        while (temp.before(windowEnd)){
+            CalendarDay day = new CalendarDay(temp);
+            //Fill the day with event blocks
+            for(ScheduleEvent e : events){
+                e.generateBlockOnDay(day);
+            }
+            //Add day to the collection
+            daysInWindow.add(day);
+            //Make another Calendar to represent the next day
+            temp = (Calendar)temp.clone();
+            //Increment day
+            temp.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return daysInWindow;
     }
 
     //Note: eventDuration might be better represented as a different data type
     public ScheduleEvent findTimeInSchedule(Calendar windowStart, Calendar windowEnd, int eventDuration){
-        //TODO: Calculate free time in THIS schedule from the given input
-        return null;
+        List<CalendarDay> daysInWindow = fillDaysInWindow(windowStart, windowEnd);
+
+        ScheduleEvent open = null;
+        for (CalendarDay d : daysInWindow){
+            //Look for an open slot
+            open = d.findTimeInDay(eventDuration);
+
+            if(open != null){
+                //Suitable event was found
+                //TODO: Consider collecting more possible slots?
+                break;
+            }
+        }
+
+        //Note: This value might be null if no such event was found
+        return open;
     }
 
     //Note: Be careful not to make accidental changes! This is intended to be for drawing events.

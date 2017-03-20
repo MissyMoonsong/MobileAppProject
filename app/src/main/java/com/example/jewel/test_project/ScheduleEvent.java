@@ -64,8 +64,8 @@ public class ScheduleEvent {
 
             if(isRecurring){
                 //TODO: Make sure the numbering system here matches...
-                int day = targetDay.getDate().DAY_OF_WEEK;
-                isValidDay = activeWeekdays[day];
+                int day = targetDay.getDate().get(Calendar.DAY_OF_WEEK);
+                isValidDay = activeWeekdays[day - 1];
             }
 
             if(isValidDay) {
