@@ -75,4 +75,13 @@ public class ScheduleEvent {
             }
         }
     }
+
+    public void changeName(String newName){
+        this.eventName = newName;
+    }
+
+    @Override
+    public String toString(){
+        return eventName + " from " + dailyStartTime.toString() + " to " + dailyEndTime.toString();
+    }
 }

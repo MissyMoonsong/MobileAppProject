@@ -23,9 +23,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, Main2Activity.class);
                 startActivity(i);
+
+                //Note: This stuff is testing event creation. After the click, results are shown.
+                //TODO: that thing I just wrote above
+
+
             }
         });
     }
+
 
     @Override
     public void onStart() {

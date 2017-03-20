@@ -49,5 +49,15 @@ public class Schedule {
         return events;
     }
 
+    @Override
+    public String toString(){
+        String str = name + ": " + "\n";
+
+        for(ScheduleEvent e : events){
+            str += e.toString() + "\n";
+        }
+
+        return str;
+    }
     //Add more methods...?
 }
