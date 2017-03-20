@@ -24,17 +24,23 @@ public class MainActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Main2Activity.class);
-                startActivity(i);
-
                 //Note: This stuff is testing event creation. After the click, results are shown.
                 Calendar start = new GregorianCalendar(2017, 3, 10);
                 Calendar end = new GregorianCalendar(2017, 3, 17);
 
                 ScheduleEvent event =
                         DataManager.Instance().getUser().getSchedule().findTimeInSchedule(start, end, 60);
-                event.changeName("New Event");
-                DataManager.Instance().getUser().getSchedule().addEvent(event);
+
+                if(event != null){
+                    event.changeName("New Event");
+                    DataManager.Instance().getUser().getSchedule().addEvent(event);
+                }
+                else{
+                    Log.d(TAG, "Null event returned");
+                }
+
+                Intent i = new Intent(MainActivity.this, Main2Activity.class);
+                startActivity(i);
             }
         });
     }

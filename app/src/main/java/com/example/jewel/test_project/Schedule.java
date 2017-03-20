@@ -91,10 +91,10 @@ public class Schedule {
 
     @Override
     public String toString(){
-        String str = name + ": " + "\n";
+        String str = "Schedule " + name + " contains the following events: \n";
 
         for(ScheduleEvent e : events){
-            str += e.toString() + "\n";
+            str += e.toString() + "\n\n";
         }
 
         return str;

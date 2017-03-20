@@ -1,6 +1,5 @@
 package com.example.jewel.test_project;
 
-import java.sql.Time;
 import java.util.Calendar;
 
 /**
@@ -9,8 +8,7 @@ import java.util.Calendar;
  */
 
 public class ScheduleEvent {
-    private Calendar windowStartDate, windowEndDate;
-    private Time dailyStartTime, dailyEndTime;
+    private Calendar start, end;
     private boolean isRecurring;
     private boolean[] activeWeekdays = new boolean[7]; //Note: SUNDAY is the first day
     private String eventName;
@@ -18,38 +16,41 @@ public class ScheduleEvent {
     /***
      * This is the constructor used for a one-time event.
      * A single one-time event is constrained to taking place within a single day.
+     * Note that the dates of start and end should match, while the times should reflect
+     * the start and end time of the event
      */
-    public  ScheduleEvent(String eventName, Calendar date,
-                          Time startTime, Time endTime){
+    public  ScheduleEvent(String eventName, Calendar start, Calendar end){
         this.eventName = eventName;
 
-        windowStartDate = date;
-        windowEndDate = date;
-        dailyStartTime = startTime;
-        dailyEndTime = endTime;
+        this.start = start;
+        this.end = end;
         isRecurring = false;
     }
 
     /***
      * This is the constructor used for a recurring event.
+     * The WINDOW of the event is indicated by the DATES of start and end
+     * The TIME of EACH INSTANCE of the event is indicated by the TIME of start and end
+     *
+     * That is, the event does not necessarily have a block start at Start-Time on Start-Date
+     *
      * The weekdays[] array should have a length of 7, each entry indicating whether the event
      * applies to the i-th day of the week(with SUNDAY as the first day)
      */
-    public  ScheduleEvent(String eventName, Calendar windowStart, Calendar windowEnd,
-                          Time startTime, Time endTime, boolean[] weekdays){
+    public  ScheduleEvent(String eventName, Calendar start, Calendar end, boolean[] weekdays){
         this.eventName = eventName;
 
-        windowStartDate = windowStart;
-        windowEndDate = windowEnd;
-        dailyStartTime = startTime;
-        dailyEndTime = endTime;
+        this.start = start;
+        this.end = end;
         isRecurring = true;
         activeWeekdays = weekdays;
     }
 
     public boolean isDayInWindow(CalendarDay targetDay){
-        return !(targetDay.getDate().before(windowStartDate)
-                || targetDay.getDate().after((windowEndDate)));
+        boolean dayBeforeStart = targetDay.getDate().before(start);
+        boolean dayAfterEnd = targetDay.getDate().after(end);
+
+        return !(dayBeforeStart || dayAfterEnd);
     }
 
     /***
@@ -70,7 +71,8 @@ public class ScheduleEvent {
 
             if(isValidDay) {
                 ScheduleBlock block = new ScheduleBlock(this, this.eventName,
-                        dailyStartTime, dailyEndTime);
+                        start, end);
+
                 targetDay.addBlock(block);
             }
         }
@@ -80,8 +82,54 @@ public class ScheduleEvent {
         this.eventName = newName;
     }
 
+    private String weekString(){
+        String result = "";
+
+        if (activeWeekdays[0]){
+            result += "U";
+        }
+        if (activeWeekdays[1]){
+            result += "M";
+        }
+        if (activeWeekdays[2]){
+            result += "T";
+        }
+        if (activeWeekdays[3]){
+            result += "W";
+        }
+        if (activeWeekdays[4]){
+            result += "R";
+        }
+        if (activeWeekdays[5]){
+            result += "F";
+        }
+        if (activeWeekdays[6]){
+            result += "S";
+        }
+        return result;
+    }
+
     @Override
     public String toString(){
-        return eventName + " from " + dailyStartTime.toString() + " to " + dailyEndTime.toString();
+        String formattedStartTime = DataManager.TIME_FORMATTER.format(start.getTime());
+        String formattedEndTime = DataManager.TIME_FORMATTER.format(end.getTime());
+
+        if(isRecurring){
+            String formattedStartDate = DataManager.DATE_FORMATTER.format(start.getTime());
+            String formattedEndDate = DataManager.DATE_FORMATTER.format(end.getTime());
+
+            return eventName + "\n"
+                    + "From dates: " + formattedStartDate + " to " + formattedEndDate + "\n"
+                    + "On days: " + weekString() + "\n"
+                    + "Time: " + formattedStartTime + " to " + formattedEndTime;
+
+        }
+        else{
+            String formattedStartDate = DataManager.DATE_FORMATTER.format(start.getTime());
+
+            return eventName + "\n"
+                   + "On date: " + formattedStartDate
+                   + "Time: " + formattedStartTime + " to " + formattedEndTime;
+        }
     }
 }

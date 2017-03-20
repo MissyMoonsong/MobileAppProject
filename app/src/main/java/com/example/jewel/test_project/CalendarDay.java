@@ -55,7 +55,6 @@ public class CalendarDay {
 
     //Note: eventDuration might be better represented as a different data type
     public ScheduleEvent findTimeInDay(int duration){
-        //Sort the blocks by start time
         if(blocksInDay.size() == 0) {
             return null;
         }
@@ -93,9 +92,13 @@ public class CalendarDay {
         }
 
         //Assemble the start and end time into an Event
-        ScheduleEvent result = new ScheduleEvent("Generated Event", (Calendar)date.clone(),
-                new Time(start.getTime().getTime()), new Time(end.getTime().getTime()));
+        ScheduleEvent result = new ScheduleEvent("Generated Event", start, end);
 
         return result;
+    }
+
+    @Override
+    public String toString(){
+        return "Day of : " + DataManager.DATE_FORMATTER.format(date.getTime());
     }
 }

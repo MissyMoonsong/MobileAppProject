@@ -1,6 +1,7 @@
 package com.example.jewel.test_project;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,6 +22,8 @@ import java.util.Map;
 
 public class DataManager {
     private static DataManager instance;
+    public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
+    public static SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("hh:mm aaa");
 
     private Person user;
     private List<Person> contacts;
@@ -59,20 +62,22 @@ public class DataManager {
 
     //TODO: Replace this with something for loading real schdules or something
     private void createDummySchedule(){
-        Calendar start = new GregorianCalendar(2017, 3, 10);
-        Calendar end = new GregorianCalendar(2017, 3, 17);
+        Calendar start1 = Calendar.getInstance();
+        Calendar end1 = Calendar.getInstance();
+        Calendar start2 = Calendar.getInstance();
+        Calendar end2 = Calendar.getInstance();
 
-        Time startTime1 = Time.valueOf("04:00:00");
-        Time endTime1 = Time.valueOf("07:30:00");
-        Time startTime2 = Time.valueOf("08:00:00");
-        Time endTime2 = Time.valueOf("09:30:00");
+        start1.set(2017,3, 10, 0,0);
+        end1.set(2017, 3, 17, 7, 0);
 
-        boolean[] weekdays = new boolean[]{false, true, true, false, false, false, false};
+        start2.set(2017,3, 11, 8, 30);
+        end2.set(2017, 3, 11, 9, 0);
 
-        ScheduleEvent recurring = new ScheduleEvent("Recurring Event", start, end,
-                startTime1,  endTime1, weekdays);
-        ScheduleEvent oneTime = new ScheduleEvent("One Time Event", start,
-                startTime2,  endTime2);
+
+        boolean[] weekdays = new boolean[]{true, true, true, true, true, true, true};
+
+        ScheduleEvent recurring = new ScheduleEvent("Recurring Event", start1, end1, weekdays);
+        ScheduleEvent oneTime = new ScheduleEvent("One Time Event", start2, end2);
 
         user.getSchedule().addEvent(recurring);
         user.getSchedule().addEvent(oneTime);
