@@ -1,10 +1,7 @@
 package com.example.jewel.test_project;
 
-import java.sql.Time;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +44,10 @@ public class CalendarDay {
 
     public void clearBlocks(){
         blocksInDay.clear();
+    }
+
+    public List<ScheduleBlock> getBlocksInDay(){
+        return  blocksInDay;
     }
 
     public Calendar getDate(){

@@ -37,8 +37,8 @@ public class Schedule {
     /***
      * Returnsa list of CalendarDays, with each day being populated with blocks
      * created from the events in this schedule at the time this method is called
-     * @param windowStart
-     * @param windowEnd
+     * @param windowStart Start of the window, inclusive, ignoring time
+     * @param windowEnd End of the window, inclusive, ignoring time
      * @return
      */
     private List<CalendarDay> fillDaysInWindow(Calendar windowStart, Calendar windowEnd){

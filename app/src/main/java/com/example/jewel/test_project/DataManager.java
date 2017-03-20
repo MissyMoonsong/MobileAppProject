@@ -1,10 +1,8 @@
 package com.example.jewel.test_project;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +20,13 @@ import java.util.Map;
 
 public class DataManager {
     private static DataManager instance;
+    //These two objects are used to format the Calendar.getDate() objects into readable strings
     public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public static SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("hh:mm aaa");
 
     private Person user;
     private List<Person> contacts;
     private List<Group> groups;
-
-    private static Map<String, Schedule> schedules = new HashMap<String, Schedule>();
 
     private DataManager(){
         //TODO: Replace with stuff to actually get this info
@@ -68,7 +65,7 @@ public class DataManager {
         Calendar end2 = Calendar.getInstance();
 
         start1.set(2017,3, 10, 0,0);
-        end1.set(2017, 3, 17, 7, 0);
+        end1.set(2017, 3, 17, 1, 0);
 
         start2.set(2017,3, 11, 8, 30);
         end2.set(2017, 3, 11, 9, 0);
