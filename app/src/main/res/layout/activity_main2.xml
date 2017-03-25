@@ -11,6 +11,7 @@
     tools:context="com.example.jewel.test_project.Main2Activity">
 
     <TextView
+        android:id="@+id/activity2_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="The button works!" />

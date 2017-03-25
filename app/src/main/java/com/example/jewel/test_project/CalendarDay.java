@@ -22,25 +22,84 @@ public class CalendarDay {
         this.date = date;
     }
 
-    //NOTE: This does not attempt to sort the blocks into any order
+    //NOTE: This puts each block into place using the comparisons in the block class
     public void addBlock(ScheduleBlock b){
-        blocksInDay.add(b);
+        if(blocksInDay.size() == 0){
+            blocksInDay.add(b);
+        } else{
+            int i = 0;
+            while (i < blocksInDay.size() && b.compareTo(blocksInDay.get(i)) > 0){
+                i++;
+            }
+            //This block comes later than everything in the list
+            if(i == blocksInDay.size()){
+                blocksInDay.add(b);
+            }
+            //This block goes into position i
+            else{
+                blocksInDay.add(i, b);
+            }
+        }
     }
 
     public void clearBlocks(){
         blocksInDay.clear();
     }
 
+    public List<ScheduleBlock> getBlocksInDay(){
+        return  blocksInDay;
+    }
+
     public Calendar getDate(){
         return date;
     }
 
-    public ScheduleEvent findEventOnday(int duration){
-        /*TODO: This method should find an open block of time on the current day
-        *and create an event from that block.
-        * If no such time slot is available, find a way to report failure.
-        * (possibly just return null for failure)
-        */
-        return null;
+    //Note: eventDuration might be better represented as a different data type
+    public ScheduleEvent findTimeInDay(int duration){
+        if(blocksInDay.size() == 0) {
+            return null;
+        }
+
+        //Create two times, representing the start and end of this event
+        Calendar start = (Calendar)date.clone();
+        Calendar end = (Calendar)date.clone();
+
+        end.add(Calendar.MINUTE, duration);
+
+        //Recall that the list of blocks is SORTED
+        //Slide the window, looking for a free time slot
+        boolean done = false;
+        while(!done){
+            //Validate window -- see if End rolled over to the next day
+            if(end.get(Calendar.DAY_OF_MONTH) != date.get(Calendar.DAY_OF_MONTH)){
+                return null;
+            }
+
+            boolean collision = false;
+            for(ScheduleBlock b : blocksInDay){
+                if(b.intersectsWith(start, end)){
+                    collision = true;
+                    break;
+                }
+            }
+
+            if(collision){ //Advance the window by 15 min
+                start.add(Calendar.MINUTE, 15);
+                end.add(Calendar.MINUTE, 15);
+            }
+            else{ //This event window works
+                done = true;
+            }
+        }
+
+        //Assemble the start and end time into an Event
+        ScheduleEvent result = new ScheduleEvent("Generated Event", start, end);
+
+        return result;
+    }
+
+    @Override
+    public String toString(){
+        return "Day of : " + DataManager.DATE_FORMATTER.format(date.getTime());
     }
 }
