@@ -33,6 +33,8 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     //List view to load events into
     ListView listView;
 
+    String scheduleType = "", scheduleKey = "";
+
     //Buttons
     Button btnManual, btnAuto;
 
@@ -49,15 +51,15 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.event_list_view);
 
         //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
-        String type = getIntent().getExtras().getString("ScheduleType");
+        scheduleType = getIntent().getExtras().getString("ScheduleType");
 
-        if(type.equals("User")){
+        if(scheduleType.equals("User")){
             Schedule s = DataManager.Instance().getUser().getSchedule();
             events = s.getAllEvents();
-        } else if (type.equals("Group")){
-            String key = getIntent().getExtras().getString("ScheduleKey");
-            Schedule s = DataManager.Instance().getGroups().get(key).getGroupSchedule();
-        } else if (type.equals("Friend")){
+        } else if (scheduleType.equals("Group")){
+            scheduleKey = getIntent().getExtras().getString("ScheduleKey");
+            Schedule s = DataManager.Instance().getGroups().get(scheduleKey).getGroupSchedule();
+        } else if (scheduleType.equals("Friend")){
             //TODO: Friend schedule
         }
 
@@ -196,10 +198,13 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view){
         if(view == btnAuto){
-            //TODO: Go to Auto-generate event actviity
-            //Intent intent = new Intent(this, PasswordDetails.class);
-            //intent.putExtras(b);
-            //startActivity(intent);
+            Bundle b = new Bundle();
+            b.putString("ScheduleType", scheduleType);
+            b.putString("ScheduleKey", scheduleKey);
+
+            Intent intent = new Intent(this, EventAutoCreate.class);
+            intent.putExtras(b);
+            startActivity(intent);
 
         } else if (view == btnManual) {
             //TODO: Go to manual-create even activity

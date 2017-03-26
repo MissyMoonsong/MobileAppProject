@@ -180,7 +180,6 @@
             android:id="@+id/button_create_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:android_margin="15dp"
             android:text="GO!"/>
     </LinearLayout>
 

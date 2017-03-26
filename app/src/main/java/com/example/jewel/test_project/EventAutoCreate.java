@@ -74,5 +74,14 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
             DataManager.Instance().getGroups().get(scheduleKey).rebuildGroupSchedule();
             //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
         }
+
+        //Go back to ListView
+        Bundle b = new Bundle();
+        b.putString("ScheduleType", scheduleType);
+        b.putString("ScheduleKey", scheduleKey);
+
+        Intent intent = new Intent(this, EventListViewer.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 }
