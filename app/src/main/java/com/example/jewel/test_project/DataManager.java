@@ -30,7 +30,7 @@ public class DataManager {
 
     private DataManager(){
         //TODO: Replace with stuff to actually get this info
-        user = new Person("Phone Owner");
+        user = new Person("Phone Owner", 0);
         contacts = new HashMap<>();
         groups = new HashMap<>();
 
@@ -54,6 +54,17 @@ public class DataManager {
 
     public Map<String, Group> getGroups(){
         return groups;
+    }
+
+    public Person findPersonByName(String name){
+        //TODO: look up in database instead
+
+        for(Person p: contacts.values()){
+            if(p.toString().equals(name)){
+                return p;
+            }
+        }
+        return null;
     }
 
 
@@ -80,7 +91,7 @@ public class DataManager {
         user.getSchedule().addEvent(oneTime);
 
         //Creating a second Person
-        Person friend = new Person("Friend");
+        Person friend = new Person("Friend", 1);
         Calendar startF = Calendar.getInstance();
         Calendar endF = Calendar.getInstance();
         startF.set(2017,3, 10, 1,0);
@@ -91,7 +102,7 @@ public class DataManager {
         friend.getSchedule().addEvent(oneTimeF);
 
         //Creating a Group
-        Group g = new Group("Test Group");
+        Group g = new Group("Test Group", 1);
         groups.put("1", g);
         g.addMember(user);
         g.addMember(friend);

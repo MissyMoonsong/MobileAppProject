@@ -18,10 +18,11 @@ public class Group {
 
     //TODO: Add everything else
 
-    public Group(String name){
+    public Group(String name, int id){
         this.name = name;
         members = new ArrayList<>();
-        groupSchedule = new Schedule(name + "Schedule");
+        groupSchedule = new Schedule(name + "Schedule", -1);
+        groupID = id;
     }
 
     /***
@@ -62,5 +63,21 @@ public class Group {
 
     public Schedule getGroupSchedule(){
         return  groupSchedule;
+    }
+
+    public String getMemberList(){
+        String result = "";
+        for(Person p : members){
+            result += p.toString() + " ";
+        }
+        return result;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public int getGroupID(){
+        return groupID;
     }
 }
