@@ -90,6 +90,8 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
+        mDrawerList.bringToFront();
+        mDrawerLayout.requestLayout();
         addDrawerItems();
         setupDrawer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -98,14 +100,19 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
     //for menu
     private void addDrawerItems() {
-        String[] osArray = {"Home", "Self", "Groups", "Friends", "About us" };
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        String[] navArray = {"Home", "Self", "Groups", "Friends", "About us" };
+        final Class[] classArray = {Register.class, EventListViewer.class,GroupMainPageActivity.class, Register.class,Register.class};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(EventListViewer.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EventListViewer.this, classArray[position]);
+                Bundle b = new Bundle();
+                b.putString("ScheduleType", "User");
+                intent.putExtras(b);
+                startActivity(intent);
             }
         });
     }
