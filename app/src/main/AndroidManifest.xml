@@ -25,7 +25,8 @@
         <activity android:name=".Main2Activity" />
         <activity android:name=".EventListViewer" />
         <activity android:name=".CreateGroup" />
-        <activity android:name=".GroupDetails"></activity>
+        <activity android:name=".GroupDetails" />
+        <activity android:name=".EventAutoCreate"></activity>
     </application>
 
 </manifest>
