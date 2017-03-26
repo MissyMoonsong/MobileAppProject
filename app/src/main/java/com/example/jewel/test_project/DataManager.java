@@ -25,14 +25,14 @@ public class DataManager {
     public static SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("hh:mm aaa");
 
     private Person user;
-    private List<Person> contacts;
-    private List<Group> groups;
+    private Map<String, Person> contacts;
+    private Map<String, Group> groups;
 
     private DataManager(){
         //TODO: Replace with stuff to actually get this info
         user = new Person("Phone Owner");
-        contacts = new ArrayList<>();
-        groups = new ArrayList<>();
+        contacts = new HashMap<>();
+        groups = new HashMap<>();
 
         createDummySchedule();
     }
@@ -48,11 +48,11 @@ public class DataManager {
         return user;
     }
 
-    public List<Person> getContacts(){
+    public Map<String, Person> getContacts(){
         return contacts;
     }
 
-    public List<Group> getGroups(){
+    public Map<String, Group> getGroups(){
         return groups;
     }
 
@@ -78,5 +78,22 @@ public class DataManager {
 
         user.getSchedule().addEvent(recurring);
         user.getSchedule().addEvent(oneTime);
+
+        //Creating a second Person
+        Person friend = new Person("Friend");
+        Calendar startF = Calendar.getInstance();
+        Calendar endF = Calendar.getInstance();
+        startF.set(2017,3, 10, 1,0);
+        endF.set(2017, 3, 17, 2, 0);
+
+        ScheduleEvent oneTimeF = new ScheduleEvent("Friend's Event", startF, endF);
+
+        friend.getSchedule().addEvent(oneTimeF);
+
+        //Creating a Group
+        Group g = new Group("Test Group");
+        groups.put("1", g);
+        g.addMember(user);
+        g.addMember(friend);
     }
 }

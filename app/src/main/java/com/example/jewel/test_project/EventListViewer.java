@@ -67,7 +67,8 @@ public class EventListViewer extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.event_list);
 
         //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
-        Schedule s = DataManager.Instance().getUser().getSchedule();
+        //Schedule s = DataManager.Instance().getUser().getSchedule();
+        Schedule s = DataManager.Instance().getGroups().get("1").getGroupSchedule();
         events = s.getAllEvents();
 
         //Note: Using a custom adapter class just to change the font color...

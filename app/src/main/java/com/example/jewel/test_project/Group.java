@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Group {
     private String name;
+    private int groupID;
     private List<Person> members;
     private Schedule groupSchedule;
 
@@ -57,5 +58,9 @@ public class Group {
         members.remove(p);
         //Rebuild without this member
         rebuildGroupSchedule();
+    }
+
+    public Schedule getGroupSchedule(){
+        return  groupSchedule;
     }
 }
