@@ -1,5 +1,6 @@
 package com.example.jewel.test_project;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,13 +26,15 @@ import java.util.List;
  * to passwords are accidental
  */
 
-public class EventListViewer extends AppCompatActivity {
+public class EventListViewer extends AppCompatActivity implements View.OnClickListener{
 
     //List of events that will be displayed
     List<ScheduleEvent> events = new ArrayList<>();
     //List view to load events into
     ListView listView;
 
+    //Buttons
+    Button btnManual, btnAuto;
 
     //for the menu
     private ListView mDrawerList;
@@ -58,8 +62,6 @@ public class EventListViewer extends AppCompatActivity {
         }
 
         fillList();
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         //Set the listener for clicking an item
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,14 +81,11 @@ public class EventListViewer extends AppCompatActivity {
                 goToEventDetails(b);
             }
         });
-        //New Password button
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-       // fab.setOnClickListener(new View.OnClickListener() {
-          //  @Override
-           // public void onClick(View view) {
-           //     goToEventCreator();
-          //  }
-       // });
+
+        btnAuto = (Button)findViewById(R.id.btn_auto_event);
+        btnAuto.setOnClickListener(this);
+        btnManual = (Button)findViewById(R.id.btn_manual_event);
+        btnManual.setOnClickListener(this);
 
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
@@ -187,11 +186,21 @@ public class EventListViewer extends AppCompatActivity {
         //startActivity(intent);
     }
 
-    private void goToEventCreator(){
-        //Intent intent = new Intent(this, CreatePassword.class);
-        //startActivity(intent);
-    }
+    @Override
+    public void onClick(View view){
+        if(view == btnAuto){
+            //TODO: Go to Auto-generate event actviity
+            //Intent intent = new Intent(this, PasswordDetails.class);
+            //intent.putExtras(b);
+            //startActivity(intent);
 
+        } else if (view == btnManual) {
+            //TODO: Go to manual-create even activity
+            //Intent intent = new Intent(this, PasswordDetails.class);
+            //intent.putExtras(b);
+            //startActivity(intent);
+        }
+    }
 
     @Override
     public void onPause(){
