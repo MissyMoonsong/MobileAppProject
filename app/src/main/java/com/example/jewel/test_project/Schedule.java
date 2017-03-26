@@ -95,6 +95,15 @@ public class Schedule {
         return  getSourceID();
     }
 
+    public ScheduleEvent findEventByID(int id){
+        for(ScheduleEvent e : events){
+            if(e.getEventID() == id){
+                return e;
+            }
+        }
+        return  null;
+    }
+
     @Override
     public String toString(){
         String str = "Schedule " + name + " contains the following events: \n";

@@ -73,14 +73,16 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
                 //Find the string displayed with the clicked item
                 String item = ((TextView) view).getText().toString();
 
-                //Find out which password this was based on the text
+                //Find out which event this was based on the text
                 ScheduleEvent event = findItemByString(item);
 
                 //Send the eventID of the event to be viewed to the details view
                 Bundle b = new Bundle();
-                b.putInt("EventID", event.getEventID());
+                b.putString("ScheduleType", scheduleType);
+                b.putString("ScheduleKey", scheduleKey);
+                b.putString("EventID",  Integer.toString(event.getEventID()));
 
-                goToEventDetails(b);
+                toEventDetails(b);
             }
         });
 
@@ -172,6 +174,12 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         fillList();
     }
 
+    public void toEventDetails(Bundle b){
+        Intent intent = new Intent(this, EventDetails.class);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
     //Helper method to use displayed string to find the object
     private ScheduleEvent findItemByString(String itemToString){
         ScheduleEvent result = null;
@@ -187,14 +195,6 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         return result;
     }
 
-    //Bundle should have the 4 values for the detail view
-    private void goToEventDetails(Bundle b){
-        //TODO: make the view to see an individual event
-        //Intent intent = new Intent(this, PasswordDetails.class);
-        //intent.putExtras(b);
-        //startActivity(intent);
-    }
-
     @Override
     public void onClick(View view){
         if(view == btnAuto){
@@ -207,7 +207,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
 
         } else if (view == btnManual) {
-            //TODO: Go to manual-create even activity
+            //TODO: Go to manual-create event activity
             //Intent intent = new Intent(this, PasswordDetails.class);
             //intent.putExtras(b);
             //startActivity(intent);

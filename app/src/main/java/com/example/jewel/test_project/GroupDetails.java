@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class GroupDetails extends AppCompatActivity implements View.OnClickListener{
-    Button btnAddMember, btnGoSchedule;
+    Button btnAddMember, btnGoSchedule, btnLeave;
     TextView userList;
     EditText txtMemberName;
     Group myGroup;
@@ -24,6 +24,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         btnAddMember.setOnClickListener(this);
         btnGoSchedule = (Button)findViewById(R.id.btn_group_schedule);
         btnGoSchedule.setOnClickListener(this);
+        btnLeave = (Button)findViewById(R.id.btn_leave_group);
+        btnLeave.setOnClickListener(this);
 
         txtMemberName = (EditText)findViewById(R.id.txt_member_name);
 
@@ -51,6 +53,16 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             Bundle b = new Bundle();
             b.putString("ScheduleType", "Group");
             b.putInt("ScheduleKey", myGroup.getGroupID());
+
+            Intent intent = new Intent(this, EventListViewer.class);
+            intent.putExtras(b);
+            startActivity(intent);
+        } else if (view == btnLeave){
+            //TODO: Remove user-group membership in database
+            DataManager.Instance().getGroups().remove(myGroup);
+
+            Bundle b = new Bundle();
+            b.putString("ScheduleType", "User");
 
             Intent intent = new Intent(this, EventListViewer.class);
             intent.putExtras(b);
