@@ -31,13 +31,13 @@ public class EventListViewer extends AppCompatActivity {
         setContentView(R.layout.event_list_view);
 
         //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
-        String type = savedInstanceState.getString("ScheduleType");
+        String type = getIntent().getExtras().getString("ScheduleType");
 
         if(type.equals("User")){
             Schedule s = DataManager.Instance().getUser().getSchedule();
             events = s.getAllEvents();
         } else if (type.equals("Group")){
-            String key = savedInstanceState.getString("ScheduleKey");
+            String key = getIntent().getExtras().getString("ScheduleKey");
             Schedule s = DataManager.Instance().getGroups().get(key).getGroupSchedule();
         } else if (type.equals("Friend")){
             //TODO: Friend schedule

@@ -153,6 +153,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         Intent i = new Intent(this, EventListViewer.class);
         Bundle b = new Bundle();
         b.putString("ScheduleType", "User");
+        i.putExtras(b);
         startActivity(i);
     }
 }
