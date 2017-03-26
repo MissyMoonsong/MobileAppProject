@@ -82,7 +82,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void setupDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.openDrawer, R.string.closeDrawer) {
 
             //menu is open
             public void onDrawerOpened(View drawerView) {
@@ -149,7 +149,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View view) {
         //calling register method on click
         registerUser();
+
         Intent i = new Intent(this, EventListViewer.class);
+        Bundle b = new Bundle();
+        b.putString("ScheduleType", "User");
         startActivity(i);
     }
 }

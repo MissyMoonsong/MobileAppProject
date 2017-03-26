@@ -30,6 +30,19 @@ public class EventListViewer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_view);
 
+        //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
+        String type = savedInstanceState.getString("ScheduleType");
+
+        if(type.equals("User")){
+            Schedule s = DataManager.Instance().getUser().getSchedule();
+            events = s.getAllEvents();
+        } else if (type.equals("Group")){
+            String key = savedInstanceState.getString("ScheduleKey");
+            Schedule s = DataManager.Instance().getGroups().get(key).getGroupSchedule();
+        } else if (type.equals("Friend")){
+            //TODO: Friend schedule
+        }
+
         fillList();
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -65,11 +78,6 @@ public class EventListViewer extends AppCompatActivity {
     private void fillList(){
         //Grab the list view
         listView = (ListView) findViewById(R.id.event_list);
-
-        //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
-        //Schedule s = DataManager.Instance().getUser().getSchedule();
-        Schedule s = DataManager.Instance().getGroups().get("1").getGroupSchedule();
-        events = s.getAllEvents();
 
         //Note: Using a custom adapter class just to change the font color...
         ArrayAdapter<ScheduleEvent> adapter = new EventAdapter(listView.getContext(),
