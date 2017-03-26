@@ -10,6 +10,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     Button createButton;
     EditText nameText;
 
+    private static int group_number = 2; //TODO: REMOVE THIS, ACCESS DATABASE
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view){
         String name = nameText.getText().toString();
         if(name.length() > 0){
-            Group g = new Group(name);
+            Group g = new Group(name, group_number);
+            group_number++;
             g.addMember(DataManager.Instance().getUser());
             //TODO: DATABASE THING HERE -- Use the GROUP ID for the key below
             DataManager.Instance().getGroups().put(name, g);

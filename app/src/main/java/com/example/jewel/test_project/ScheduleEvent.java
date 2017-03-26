@@ -101,6 +101,10 @@ public class ScheduleEvent {
         return eventID;
     }
 
+    public void setEventID(int id){
+        eventID = id;
+    }
+
     private String weekString(){
         String result = "";
 
