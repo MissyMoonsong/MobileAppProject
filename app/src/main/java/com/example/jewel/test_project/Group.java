@@ -14,7 +14,6 @@ public class Group {
     private String name;
     private List<Person> members;
     private Schedule groupSchedule;
-    private List<ScheduleEvent> groupEvents;
 
     //TODO: Add everything else
 
@@ -22,27 +21,31 @@ public class Group {
         this.name = name;
         members = new ArrayList<>();
         groupSchedule = new Schedule(name + "Schedule");
-        groupEvents = new ArrayList<>();
     }
 
-    //Clears old group schedule and rebuilds a a new one
-    public void buildGroupSchedule(){
+    /***
+     * Clears the old group schedule and rebuilds a new one.
+     * Use this for updates to member schedules occur that are not handled
+     * by adding or removing the member.
+     */
+    public void rebuildGroupSchedule(){
         groupSchedule.clearEvents();
-        //TODO: Combine members' schedules into a group schedule (does not change member schedule)
+
+        for(Person p : members){
+            addPersonalSchedule(p.getSchedule());
+        }
+
+        /*TODO: Probably a good candidate for improving performance by
+         * creating blocks of "busy" time instead of having many events,
+         * which will probably have overlap
+         */
     }
 
     private void addPersonalSchedule(Schedule ps){
-        //TODO: add this person's schedule into the group's
-    }
-
-    public void addGroupEvent(ScheduleEvent event){
-        groupSchedule.addEvent(event);
-        groupEvents.add(event);
-    }
-
-    private void removePersonalSchedule(Schedule ps){
-        //TODO: This is going to need some work to find all the right events to remove
-        //Maybe save Group Events separately, then rebuild the schedule without the person
+        //Adds a reference to each event in the person's schedule to the group schedule
+        for(ScheduleEvent e : ps.getAllEvents()){
+            groupSchedule.addEvent(e);
+        }
     }
 
     public void addMember(Person p){
@@ -51,7 +54,8 @@ public class Group {
     }
 
     public void removeMember(Person p){
-        members.add(p);
-        removePersonalSchedule(p.getSchedule());
+        members.remove(p);
+        //Rebuild without this member
+        rebuildGroupSchedule();
     }
 }

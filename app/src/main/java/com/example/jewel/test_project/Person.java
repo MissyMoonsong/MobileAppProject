@@ -8,6 +8,7 @@ package com.example.jewel.test_project;
 public class Person {
     private Schedule schedule;
     private String name;
+    private int UserID; //TODO: This is supposed to be the database key. Change type if needed.
     //TODO: Add everything else
 
     public Person(String name){
