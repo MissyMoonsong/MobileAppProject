@@ -14,10 +14,12 @@ import java.util.List;
 public class Schedule {
     private List<ScheduleEvent> events;
     private String name;
+    private int sourceID;
     //Add more...?
 
-    public Schedule(String name){
+    public Schedule(String name, int sourceID){
         this.name = name;
+        this.sourceID = sourceID;
         events = new ArrayList<>();
     }
 
@@ -87,6 +89,10 @@ public class Schedule {
     //Note: Be careful not to make accidental changes! This is intended to be for drawing events.
     public List<ScheduleEvent> getAllEvents(){
         return events;
+    }
+
+    public int getSourceID(){
+        return  getSourceID();
     }
 
     @Override

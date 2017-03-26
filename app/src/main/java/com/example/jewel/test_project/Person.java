@@ -14,7 +14,7 @@ public class Person {
     public Person(String name,int id){
         this.name = name;
         //TODO: Change naming?
-        schedule = new Schedule(name + "'s Schedule");
+        schedule = new Schedule(name + "'s Schedule", id);
         UserID = id;
     }
 

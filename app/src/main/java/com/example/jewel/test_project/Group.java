@@ -21,7 +21,7 @@ public class Group {
     public Group(String name, int id){
         this.name = name;
         members = new ArrayList<>();
-        groupSchedule = new Schedule(name + "Schedule");
+        groupSchedule = new Schedule(name + "Schedule", id);
         groupID = id;
     }
 
