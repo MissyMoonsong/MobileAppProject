@@ -85,7 +85,9 @@ public class DataManager {
         boolean[] weekdays = new boolean[]{true, true, true, true, true, true, true};
 
         ScheduleEvent recurring = new ScheduleEvent("Recurring Event", start1, end1, weekdays);
+        recurring.setEventID(0);
         ScheduleEvent oneTime = new ScheduleEvent("One Time Event", start2, end2);
+        recurring.setEventID(1);
 
         user.getSchedule().addEvent(recurring);
         user.getSchedule().addEvent(oneTime);
