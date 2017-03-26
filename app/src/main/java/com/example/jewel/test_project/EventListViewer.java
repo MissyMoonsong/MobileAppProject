@@ -2,7 +2,6 @@ package com.example.jewel.test_project;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,14 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
@@ -33,12 +25,13 @@ import java.util.List;
  */
 
 public class EventListViewer extends AppCompatActivity {
+
     //List of events that will be displayed
     List<ScheduleEvent> events = new ArrayList<>();
     //List view to load events into
     ListView listView;
 
-    //menu
+
     //for the menu
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -98,14 +91,13 @@ public class EventListViewer extends AppCompatActivity {
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-
         addDrawerItems();
         setupDrawer();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
+    //for menu
     private void addDrawerItems() {
         String[] osArray = {"Home", "Self", "Groups", "Friends", "About us" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
@@ -119,13 +111,14 @@ public class EventListViewer extends AppCompatActivity {
         });
     }
 
+    //for menu
     private void setupDrawer() {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.openDrawer, R.string.closeDrawer) {
 
             //menu is open
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
+                getSupportActionBar().setTitle("Main-Nav");
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
@@ -198,12 +191,15 @@ public class EventListViewer extends AppCompatActivity {
         //Intent intent = new Intent(this, CreatePassword.class);
         //startActivity(intent);
     }
+
+
     @Override
     public void onPause(){
         //End activity if the user leaves the app
         super.onPause();
         finish();
     }
+
 
     //menu
     @Override
