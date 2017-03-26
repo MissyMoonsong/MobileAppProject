@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Main2Activity" />
+        <activity android:name=".CreateLoginActivity" />
         <activity android:name=".Login"></activity>
     </application>
 

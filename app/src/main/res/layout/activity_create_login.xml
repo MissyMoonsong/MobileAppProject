@@ -12,7 +12,7 @@
     tools:context="com.example.jewel.test_project.Login">
 
     <ScrollView
-        android:id="@+id/login_form"
+        android:id="@+id/login_create_form"
         android:layout_width="336dp"
         android:layout_height="463dp"
         android:layout_marginBottom="8dp">

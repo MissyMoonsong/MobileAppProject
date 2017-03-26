@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Null event returned");
                 }
 
-                Intent i = new Intent(MainActivity.this, Main2Activity.class);
+                Intent i = new Intent(MainActivity.this, CreateLoginActivity.class);
                 startActivity(i);
             }
         });
