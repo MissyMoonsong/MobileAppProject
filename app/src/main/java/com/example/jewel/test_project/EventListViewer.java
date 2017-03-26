@@ -1,6 +1,7 @@
 package com.example.jewel.test_project;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -64,6 +65,10 @@ public class EventListViewer extends AppCompatActivity {
     private void fillList(){
         //Grab the list view
         listView = (ListView) findViewById(R.id.event_list);
+
+        //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
+        Schedule s = DataManager.Instance().getUser().getSchedule();
+        events = s.getAllEvents();
 
         //Note: Using a custom adapter class just to change the font color...
         ArrayAdapter<ScheduleEvent> adapter = new EventAdapter(listView.getContext(),

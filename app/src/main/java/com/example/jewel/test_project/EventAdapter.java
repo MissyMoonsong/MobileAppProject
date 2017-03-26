@@ -26,7 +26,7 @@ public class EventAdapter extends ArrayAdapter<ScheduleEvent> {
 
         TextView tv = (TextView) view.findViewById(android.R.id.text1);
         //Changing the text color
-        tv.setTextColor(Color.argb(255,255, 255,255));
+        //tv.setTextColor(Color.argb(255,255, 255,255));
 
         return view;
     }
