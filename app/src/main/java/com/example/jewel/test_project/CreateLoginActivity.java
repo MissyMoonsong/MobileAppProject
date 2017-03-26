@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.ScrollView;
 
 import java.util.Calendar;
@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 public class CreateLoginActivity extends AppCompatActivity {
     private ScrollView view;
     private static final String TAG = "CreateLoginActivity";
+    EditText ed1,ed2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,8 @@ public class CreateLoginActivity extends AppCompatActivity {
         view = (ScrollView)findViewById(R.id.login_create_form);
         fillInfo();
 
+        ed1 = (EditText)findViewById(R.id.email);
+        ed2 = (EditText)findViewById(R.id.password);
         Button mButton = (Button) findViewById(R.id.button_login);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +47,12 @@ public class CreateLoginActivity extends AppCompatActivity {
                     Log.d(TAG, "Null event returned");
                 }
 
+                //set login info from the edit text things
+
+                //in regular login use
+                //if(ed1.getText().toString().equals("database value") &&
+                //      ed2.getText().toString().equals("database value")) {
+                //to check
                 Intent i = new Intent(CreateLoginActivity.this, Main2Activity.class);
                 startActivity(i);
             }
