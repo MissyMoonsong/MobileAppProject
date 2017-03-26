@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <EditText
+        android:id="@+id/event_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Event Name"
+        android:inputType="textPersonName" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/start_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Start Hour(0-23)"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/start_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Start Minute(0-59)"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/end_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="End Hour(0-23)"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/end_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="End Minute(0-59)"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/start_month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Start Month(1-12)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/start_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Start Day(1-31)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/start_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Start Year(XXXX)"
+        android:inputType="number" />
+
+
+    <EditText
+        android:id="@+id/end_month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="End Month(1-12)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/end_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="End Day(1-31)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/end_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="End Year(XXXX)"
+        android:inputType="number" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/r_sunday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="Sun"
+            android:textOn="Yes" />
+
+        <ToggleButton
+            android:id="@+id/r_monday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:textOff="Mon"
+            android:textOn="Yes" />
+
+        <ToggleButton
+            android:id="@+id/r_tuesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textOff="Tue"
+            android:textOn="Yes" />
+
+        <ToggleButton
+            android:id="@+id/r_wednesday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textOff="Wed"
+            android:textOn="Yes" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ToggleButton
+            android:id="@+id/r_thursday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:textOff="Thur"
+            android:textOn="Yes" />
+
+        <ToggleButton
+            android:id="@+id/r_friday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"
+            android:textOff="Fri"
+            android:textOn="Yes" />
+
+        <ToggleButton
+            android:id="@+id/r_saturday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"
+            android:textOff="Sat"
+            android:textOn="Yes" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
