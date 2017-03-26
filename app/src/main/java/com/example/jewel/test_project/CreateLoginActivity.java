@@ -32,20 +32,8 @@ public class CreateLoginActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Note: This stuff is testing event creation. After the click, results are shown.
-                Calendar start = new GregorianCalendar(2017, 3, 10);
-                Calendar end = new GregorianCalendar(2017, 3, 17);
 
-                ScheduleEvent event =
-                        DataManager.Instance().getUser().getSchedule().findTimeInSchedule(start, end, 60);
 
-                if(event != null){
-                    event.changeName("New Event");
-                    DataManager.Instance().getUser().getSchedule().addEvent(event);
-                }
-                else{
-                    Log.d(TAG, "Null event returned");
-                }
 
                 //set login info from the edit text things
 
