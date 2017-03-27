@@ -138,8 +138,12 @@ public class DataManager {
      * @param scheduleType
      * @param groupKey
      */
-    public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey) {
-        //TODO: Maybe remove this when DB is established
+    public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey, Firebase ref) {
+        //Store values to firebase
+        //TODO: This line isn't quite right.
+        ref.child("Event").push().getKey();
+        //TODO: Fetch the ID from that post
+
         event.setEventID(DataManager.Instance().getNextEventID());
 
         if (scheduleType.equals("Group")) { //Group so add to each member
@@ -153,8 +157,9 @@ public class DataManager {
             //Update to new group view
             groups.get(groupKey).rebuildGroupSchedule();
         } else { //Single user schedule -- THIS user
-            //TODO: Add event to database for the phone user
             user.getSchedule().addEvent(event);
+            //TODO: Add event to database for the phone user
+
         }
     }
 
