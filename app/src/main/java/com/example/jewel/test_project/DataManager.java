@@ -140,9 +140,9 @@ public class DataManager {
      */
     public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey, Firebase ref) {
         //Store values to firebase
-        //TODO: This line isn't quite right.
-        ref.child("Event").push().getKey();
+        ref.child("Event").push().setValue(event);
         //TODO: Fetch the ID from that post
+
 
         event.setEventID(DataManager.Instance().getNextEventID());
 
