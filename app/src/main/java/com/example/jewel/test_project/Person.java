@@ -8,9 +8,9 @@ package com.example.jewel.test_project;
 public class Person {
     private Schedule schedule;
     private String name;
-    private int userID;
+    private String userID;
 
-    public Person(String name,int id){
+    public Person(String name, String id){
         this.name = name;
         schedule = new Schedule(name + "'s Schedule", id);
         userID = id;
@@ -25,7 +25,7 @@ public class Person {
         return name;
     }
 
-    public int getUserID(){
+    public String getUserID(){
         return userID;
     }
 }

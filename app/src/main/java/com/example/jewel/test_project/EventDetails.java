@@ -42,7 +42,7 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
     }
 
     private void fillInfo() {
-        ScheduleEvent event = schedule.findEventByID(Integer.parseInt(eventID));
+        ScheduleEvent event = schedule.findEventByID(eventID);
 
         txtName.setText(event.getEventName());
         txtRecurrence.setText(event.getEventRecurrence());
@@ -66,7 +66,7 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
 
         } else if (view == btnDelete) {
             //Delete this event
-            schedule.removeEvent(schedule.findEventByID(Integer.parseInt(eventID)));
+            schedule.removeEvent(schedule.findEventByID(eventID));
             //TODO: Delete this event - group and/or user combo from database
 
             //Go back to list view

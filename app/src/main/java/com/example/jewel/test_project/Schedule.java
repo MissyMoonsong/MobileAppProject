@@ -14,10 +14,10 @@ import java.util.List;
 public class Schedule {
     private List<ScheduleEvent> events;
     private String name;
-    private int sourceID;
+    private String sourceID;
     //Add more...?
 
-    public Schedule(String name, int sourceID){
+    public Schedule(String name, String sourceID){
         this.name = name;
         this.sourceID = sourceID;
         events = new ArrayList<>();
@@ -94,9 +94,9 @@ public class Schedule {
         return  getSourceID();
     }
 
-    public ScheduleEvent findEventByID(int id){
+    public ScheduleEvent findEventByID(String id){
         for(ScheduleEvent e : events){
-            if(e.getEventID() == id){
+            if(e.getEventID().equals(id)){
                 return e;
             }
         }

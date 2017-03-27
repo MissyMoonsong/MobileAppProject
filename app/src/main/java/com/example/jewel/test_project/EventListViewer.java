@@ -86,7 +86,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
                 Bundle b = new Bundle();
                 b.putString("ScheduleType", scheduleType);
                 b.putString("ScheduleKey", groupKey);
-                b.putString("EventID", Integer.toString(event.getEventID()));
+                b.putString("EventID",event.getEventID());
 
                 toEventDetails(b);
             }
