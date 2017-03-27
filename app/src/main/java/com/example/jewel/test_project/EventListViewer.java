@@ -233,12 +233,20 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
         if (event != null) { //Event Found
             event.changeName(eventName);
+            event.setEventID(DataManager.Instance().getNextEventID());
 
-            //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
-            s.addEvent(event);
             if (scheduleType.equals("Group")) {
+                for (Person p : DataManager.Instance().getGroups().get(groupKey).getMembers()){
+                    //Add event for each person
+                    p.getSchedule().addEvent(event);
+                    //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
+                }
+
+                //Update to new group view
                 DataManager.Instance().getGroups().get(groupKey).rebuildGroupSchedule();
-                //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
+            } else { //Single user schedule
+                //TODO: Add event to database for single user
+                s.addEvent(event);
             }
         }
 

@@ -68,6 +68,7 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
 
         ScheduleEvent event = schedule.findTimeInSchedule(windowStart, windowEnd, duration);
         event.changeName(eventName);
+        event.setEventID(DataManager.Instance().getNextEventID());
         //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
         schedule.addEvent(event);
         if (scheduleType.equals("Group")) {

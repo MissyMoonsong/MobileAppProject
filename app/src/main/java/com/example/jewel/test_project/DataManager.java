@@ -38,27 +38,14 @@ public class DataManager {
     public static String SCHEDULE_TYPE_KEY = "ScheduleType"; //User or Group
     public static String GROUP_ID_KEY = "GroupID"; //key to access correct Group
     public static String EVENT_ID_KEY = "EventID"; //key to access correct Event
+    //Temporary variables
+    private static int nextEventID = 1, nextGroupID = 1, nextUserID = 0;
 
     private Person user;
     private Map<String, Group> groups;
 
     private DataManager(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
-        ref.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        refreshFromDatabase(dataSnapshot);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                }
-        );
-
-        //createDummySchedule();
+        createDummySchedule();
     }
 
     public static DataManager Instance(){
@@ -78,6 +65,9 @@ public class DataManager {
 
     //TODO: Replace this with something for loading real schedules or something
     private void createDummySchedule(){
+        user = new Person("Phone Owner", getNextUserID());
+        groups = new HashMap<>();
+
         Calendar start1 = Calendar.getInstance();
         Calendar end1 = Calendar.getInstance();
         Calendar start2 = Calendar.getInstance();
@@ -93,151 +83,47 @@ public class DataManager {
         boolean[] weekdays = new boolean[]{true, true, true, true, true, true, true};
 
         ScheduleEvent recurring = new ScheduleEvent("Recurring Event", start1, end1, weekdays);
+        recurring.setEventID(getNextEventID());
         ScheduleEvent oneTime = new ScheduleEvent("One Time Event", start2, end2);
+        oneTime.setEventID(getNextEventID());
 
         user.getSchedule().addEvent(recurring);
         user.getSchedule().addEvent(oneTime);
 
         //Creating a second Person
-        Person friend = new Person("Friend", "1");
+        Person friend = new Person("Friend", getNextUserID());
         Calendar startF = Calendar.getInstance();
         Calendar endF = Calendar.getInstance();
         startF.set(2017,3, 10, 1,0);
         endF.set(2017, 3, 17, 2, 0);
 
         ScheduleEvent oneTimeF = new ScheduleEvent("Friend's Event", startF, endF);
+        oneTimeF.setEventID(getNextEventID());
 
         friend.getSchedule().addEvent(oneTimeF);
 
         //Creating a Group
-        Group g = new Group("Test Group", "1");
-        groups.put("1", g);
+        Group g = new Group("Test Group", getNextGroupID());
+        groups.put(g.getGroupID(), g);
         g.addMember(user);
         g.addMember(friend);
     }
 
-    public void refreshFromDatabase(DataSnapshot dataSnapshot){
-        groups = new HashMap<>();
-
-        //Creating firebase object
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        //Get user id
-        String userID = user.getUid();
-        String name =  user.getEmail();
-        //Set up user object
-        this.user = new Person(name, userID);
-
-        Schedule userSchedule = this.user.getSchedule();
-        buildSchedule(userSchedule, userID, dataSnapshot);
-
-        //get all groups user is in
-        DataSnapshot userGroups = dataSnapshot.child("MembershipUserToGroup").child(userID);
-        //For reach group
-        for(DataSnapshot groupIDSnap : userGroups.getChildren()){
-            String groupID = groupIDSnap.getValue().toString();
-
-            //Get group name
-            DataSnapshot groupSnap = dataSnapshot.child("Group").child(groupID);
-            String groupName = groupSnap.getValue().toString();
-
-            Group g = new Group(groupName, groupID);
-            groups.put(groupID, g);
-
-            //for each member
-            DataSnapshot groupMembers = dataSnapshot.child("MembershipGroupToUser").child(groupID);
-
-            for(DataSnapshot memberIDSnap : groupMembers.getChildren()){
-                String memberID = memberIDSnap.getValue().toString();
-
-                buildSchedule(g.getGroupSchedule(), memberID, dataSnapshot);
-            }
-        }
+    public String getNextEventID(){
+        String val = Integer.toString(nextEventID);
+        nextEventID++;
+        return val;
     }
 
-    public void buildSchedule(Schedule s, String userID, DataSnapshot dataSnapshot){
-        //get all events user connects to -- build schedule
-        DataSnapshot schedules = dataSnapshot.child("Schedule");
-        DataSnapshot userSchedule = schedules.child(userID);
-
-        for(DataSnapshot eventIDChild : userSchedule.getChildren()){
-            String eventID = eventIDChild.getValue().toString();
-
-            DataSnapshot eventSnapshot = dataSnapshot.child("Event");
-            DataSnapshot event_id_snap = eventSnapshot.child(eventID);
-
-            Map<String, Object> attributes = new HashMap<>();
-
-            //Make a map of this event's attributes
-            for(DataSnapshot eventAttribute : event_id_snap.getChildren()) {
-                attributes.put(eventAttribute.getKey(), eventAttribute.getValue());
-            }
-
-            ScheduleEvent e = buildEventFromMap(attributes);
-            e.setEventID(eventID);
-
-            s.addEvent(e);
-        }
+    public String getNextGroupID(){
+        String val = Integer.toString(nextGroupID);
+        nextGroupID++;
+        return val;
     }
 
-    public ScheduleEvent buildEventFromMap(Map<String, Object> attributes){
-        String eName = attributes.get("eventName").toString();
-
-        int sYear = Integer.parseInt(attributes.get("startYear").toString());
-        int sMonth = Integer.parseInt(attributes.get("startMonth").toString());
-        int sDay = Integer.parseInt(attributes.get("startDay").toString());
-        int sHour = Integer.parseInt(attributes.get("startHour").toString());
-        int sMin = Integer.parseInt(attributes.get("startMin").toString());
-
-        int eYear  = Integer.parseInt(attributes.get("endYear").toString());
-        int eMonth  = Integer.parseInt(attributes.get("endMonth").toString());
-        int eDay  = Integer.parseInt(attributes.get("endDay").toString());
-        int eHour  = Integer.parseInt(attributes.get("endHour").toString());
-        int eMin  = Integer.parseInt(attributes.get("endMin").toString());
-
-        boolean sun = (boolean)attributes.get("rsunday");
-        boolean mon= (boolean)attributes.get("rmonday");
-        boolean tue= (boolean)attributes.get("rtuesday");
-        boolean wed= (boolean)attributes.get("rwednesday");
-        boolean thu= (boolean)attributes.get("rthursday");
-        boolean fri= (boolean)attributes.get("rfriday");
-        boolean sat= (boolean)attributes.get("rsaturday");
-
-        //Adding to the schedule within the app
-        Calendar start = Calendar.getInstance();
-
-        start.set(Calendar.YEAR, sYear);
-        start.set(Calendar.MONTH, sMonth);
-        start.set(Calendar.DAY_OF_MONTH, sDay);
-        start.set(Calendar.HOUR_OF_DAY, sHour);
-        start.set(Calendar.MINUTE, sMin);
-
-        Calendar end = Calendar.getInstance();
-        end.set(Calendar.YEAR, eYear);
-        end.set(Calendar.MONTH, eMonth);
-        end.set(Calendar.DAY_OF_MONTH, eDay);
-        end.set(Calendar.HOUR_OF_DAY, eHour);
-        end.set(Calendar.MINUTE, eMin);
-
-        boolean[] weekdays = new boolean[7];
-        weekdays[0] = sun;
-        weekdays[1] = mon;
-        weekdays[2] = tue;
-        weekdays[3] = wed;
-        weekdays[4] = thu;
-        weekdays[5] = fri;
-        weekdays[6] = sat;
-
-
-        ScheduleEvent e;
-
-        if(ScheduleEvent.anyDaySelected(weekdays)){ //Recurring
-             e = new ScheduleEvent(eName, start, end, weekdays);
-
-        } else{
-             e = new ScheduleEvent(eName, start, end);
-        }
-
-        return e;
+    public String getNextUserID(){
+        String val = Integer.toString(nextUserID);
+        nextUserID++;
+        return val;
     }
 }

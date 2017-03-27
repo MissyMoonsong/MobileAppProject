@@ -43,7 +43,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
                 //TODO: Lookup person through DB instead
-                Person p = new Person(name, "2");
+                Person p = new Person(name, DataManager.Instance().getNextUserID());
                 if(p != null) {
                     myGroup.addMember(p);
                 } else{
