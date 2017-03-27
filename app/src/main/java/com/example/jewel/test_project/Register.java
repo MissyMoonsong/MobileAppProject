@@ -29,7 +29,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     //defining view objects
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button buttonSignup;
+    private Button buttonSignup, buttonLogin;
     private ProgressDialog progressDialog;
 
 
@@ -58,11 +58,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
+        buttonLogin = (Button) findViewById(R.id.buttonLogin);
 
         progressDialog = new ProgressDialog(this);
 
         //attaching listener to button
         buttonSignup.setOnClickListener(this);
+        buttonLogin.setOnClickListener(this);
 
         //menu
 
@@ -159,14 +161,15 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        //calling register method on click
-        registerUser();
 
-        Intent i = new Intent(this, EventListViewer.class);
-        Bundle b = new Bundle();
-        b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
-        i.putExtras(b);
-        startActivity(i);
+        if (view == buttonSignup){
+            //calling register method on click
+            registerUser();
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        } else if (view == buttonLogin) {
+            startActivity(new Intent(Register.this, LoginActivity.class));
+        }
     }
 
     @Override
