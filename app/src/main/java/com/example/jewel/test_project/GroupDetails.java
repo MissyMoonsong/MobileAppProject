@@ -43,7 +43,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
                 //TODO: Lookup person through DB instead
-                Person p = new Person(name, 2);
+                Person p = new Person(name, "2");
                 if(p != null) {
                     myGroup.addMember(p);
                 } else{
@@ -54,7 +54,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         } else if (view == btnGoSchedule){
             Bundle b = new Bundle();
             b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
-            b.putInt(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
+            b.putString(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
 
             Intent intent = new Intent(this, EventListViewer.class);
             intent.putExtras(b);

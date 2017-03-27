@@ -14,11 +14,11 @@ import java.util.List;
 
 public class Group {
     private String name;
-    private int groupID;
+    private String groupID;
     private List<Person> members;
     private Schedule groupSchedule;
 
-    public Group(String name, int id){
+    public Group(String name, String id){
         this.name = name;
         members = new ArrayList<>();
         groupSchedule = new Schedule(name + "Schedule", id);
@@ -75,7 +75,7 @@ public class Group {
         return name;
     }
 
-    public int getGroupID(){
+    public String getGroupID(){
         return groupID;
     }
 }

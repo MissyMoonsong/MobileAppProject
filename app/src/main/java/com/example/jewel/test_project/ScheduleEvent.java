@@ -12,7 +12,7 @@ public class ScheduleEvent {
     private boolean isRecurring;
     private boolean[] activeWeekdays = new boolean[7]; //Note: SUNDAY is the first day
     private String eventName;
-    private int eventID; //TODO: get this from database
+    private String eventID; //TODO: get this from database
 
     /***
      * This is the constructor used for a one-time event.
@@ -97,11 +97,11 @@ public class ScheduleEvent {
         this.eventName = newName;
     }
 
-    public int getEventID() {
+    public String getEventID() {
         return eventID;
     }
 
-    public void setEventID(int id) {
+    public void setEventID(String id) {
         eventID = id;
     }
 

@@ -137,7 +137,7 @@ public class CreateEvent extends AppCompatActivity {
                 if(scheduleType.equals("Group")){
                     Group g = DataManager.Instance().getGroups().get(groupKey);
                     for(Person p : g.getMembers()){
-                        int userID = p.getUserID();
+                        String userID = p.getUserID();
                         //TODO: Database stuff: connect to this person's user id if not already
                     }
                 } else {
