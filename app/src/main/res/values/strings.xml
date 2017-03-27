@@ -42,6 +42,41 @@
         <item>Settings</item>
     </string-array>
 
+    <!-- Strings related to Event Viewing -->
+    <string name="event_creation_manual">Manual Event</string>
+    <string name="event_creation_auto">Auto Event</string>
+
+    <string name="event_auto_name_field">Event Name:</string>
+    <string name="event_auto_name_placeholder">New Event</string>
+
+    <string name="event_auto_start_field">Search Window Start:</string>
+    <string name="event_auto_start_year_placeholder">Start Year</string>
+    <string name="event_auto_start_month_placeholder">Start Month</string>
+    <string name="event_auto_start_day_placeholder">Start Day</string>
+
+    <string name="event_auto_end_field">Search Window End:</string>
+    <string name="event_auto_end_year_placeholder">End Year</string>
+    <string name="event_auto_end_month_placeholder">End Month</string>
+    <string name="event_auto_end_day_placeholder">End Day</string>
+
+    <string name="event_auto_duration_field">Duration in Minutes (multiple of 15):</string>
+    <string name="event_auto_duration_placeholder">Minutes</string>
+
+    <string name="event_auto_generate_button">Generate Event</string>
+
+    <string name="event_details_delete">Delete Event</string>
+    <string name="event_details_back">Back</string>
+
+    <!-- Strings related to Group Viewing -->
+    <string name="group_details_add_user">Add Member</string>
+    <string name="group_details_leave">Leave Group</string>
+    <string name="group_details_to_schedule">To Schedule</string>
+    <string name="group_details_user_name_placeholder">Username</string>
+
+    <string name="group_create_name_field">Group Name:</string>
+    <string name="group_create_name_placeholder">New Group</string>
+    <string name="group_create_submit_button">Create Group</string>
+
     <string name="activity_title_about_us">About Us</string>
     <string name="activity_title_privacy_policy">Privacy Policy</string>
     <string name="action_clear_all">Clear All</string>

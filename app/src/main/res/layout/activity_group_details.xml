@@ -6,46 +6,50 @@
     android:layout_height="match_parent"
     tools:context="com.example.jewel.test_project.GroupDetails">
 
-    <Button
-        android:id="@+id/btn_group_add_member"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add User"
-        tools:layout_editor_absoluteX="280dp"
-        tools:layout_editor_absoluteY="447dp" />
+        android:layout_height="495dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_group_schedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go To Schedule"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="445dp" />
+        <TextView
+            android:id="@+id/txt_user_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Users" />
 
-    <TextView
-        android:id="@+id/txt_user_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Users"
-        tools:layout_editor_absoluteX="156dp"
-        tools:layout_editor_absoluteY="16dp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/txt_member_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteX="154dp"
-        tools:layout_editor_absoluteY="385dp" />
+            <EditText
+                android:id="@+id/txt_member_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="@string/group_details_user_name_placeholder" />
 
-    <Button
-        android:id="@+id/btn_leave_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Leave This Group"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="309dp" />
+            <Button
+                android:id="@+id/btn_group_add_member"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/group_details_add_user" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_leave_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/group_details_leave" />
+
+        <Button
+            android:id="@+id/btn_group_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/group_details_to_schedule" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

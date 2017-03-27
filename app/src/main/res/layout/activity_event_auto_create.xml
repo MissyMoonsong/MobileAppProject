@@ -17,7 +17,8 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Name" />
+            android:text="@string/event_auto_name_field"
+            android:labelFor="@+id/txt_auto_event_name"/>
 
         <EditText
             android:id="@+id/txt_auto_event_name"
@@ -25,20 +26,20 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="@string/event_auto_name_placeholder" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Window Start" />
+            android:text="@string/event_auto_start_field" />
 
         <EditText
             android:id="@+id/txt_auto_start_year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="year"
+            android:hint="@string/event_auto_start_year_placeholder"
             android:inputType="number" />
 
         <EditText
@@ -46,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="month"
+            android:hint="@string/event_auto_start_month_placeholder"
             android:inputType="number" />
 
         <EditText
@@ -54,21 +55,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="day"
+            android:hint="@string/event_auto_start_day_placeholder"
             android:inputType="number" />
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search Window End" />
+            android:text="@string/event_auto_end_field" />
 
         <EditText
             android:id="@+id/txt_auto_end_year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="year"
+            android:hint="@string/event_auto_end_year_placeholder"
             android:inputType="number" />
 
         <EditText
@@ -76,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="month"
+            android:hint="@string/event_auto_end_month_placeholder"
             android:inputType="number" />
 
         <EditText
@@ -84,28 +85,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="day"
+            android:hint="@string/event_auto_end_day_placeholder"
             android:inputType="number" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Duration (Multiple of15 min)" />
+            android:text="@string/event_auto_duration_field" />
 
         <EditText
             android:id="@+id/txt_auto_event_duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="minutes"
+            android:hint="@string/event_auto_duration_placeholder"
             android:inputType="number" />
 
         <Button
             android:id="@+id/btn_auto_gen_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Generate" />
+            android:text="@string/event_auto_generate_button" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

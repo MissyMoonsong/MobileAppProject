@@ -34,7 +34,7 @@
                 android:id="@+id/btn_manual_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manual Event"
+                android:text="@string/event_creation_manual"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="445dp" />
 
@@ -42,7 +42,7 @@
                 android:id="@+id/btn_auto_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Generate Event"
+                android:text="@string/event_creation_auto"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="445dp" />
         </LinearLayout>
@@ -50,9 +50,7 @@
         <ListView
             android:id="@+id/event_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
