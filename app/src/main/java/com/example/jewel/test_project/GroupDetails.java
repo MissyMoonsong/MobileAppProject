@@ -32,6 +32,10 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
         myGroup = DataManager.Instance().getGroups().get(groupKey);
 
+        fillNames();
+    }
+
+    private void fillNames(){
         userList = (TextView)findViewById(R.id.txt_user_list);
         String text = myGroup.getName() + "\n" + myGroup.getMemberList();
         userList.setText(text);
@@ -51,6 +55,9 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
+            //Refresh member names
+            fillNames();
+
         } else if (view == btnGoSchedule){
             Bundle b = new Bundle();
             b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
@@ -61,13 +68,9 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         } else if (view == btnLeave){
             //TODO: Remove user-group membership in database
-            DataManager.Instance().getGroups().remove(myGroup);
+            DataManager.Instance().getGroups().remove(myGroup.getGroupID());
 
-            Bundle b = new Bundle();
-            b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
-
-            Intent intent = new Intent(this, EventListViewer.class);
-            intent.putExtras(b);
+            Intent intent = new Intent(this, GroupMainPageActivity.class);
             startActivity(intent);
         }
     }

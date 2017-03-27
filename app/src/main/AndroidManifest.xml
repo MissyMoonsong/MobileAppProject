@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EventListViewer" />
+        <activity android:name=".CreateEvent" />
         <activity android:name=".CreateGroup" />
         <activity android:name=".GroupDetails" />
         <activity android:name=".EventAutoCreate" />

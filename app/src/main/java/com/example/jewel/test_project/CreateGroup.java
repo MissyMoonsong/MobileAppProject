@@ -1,5 +1,6 @@
 package com.example.jewel.test_project;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +10,6 @@ import android.widget.EditText;
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener{
     Button createButton;
     EditText nameText;
-
-    private static int group_number = 2; //TODO: REMOVE THIS, ACCESS DATABASE
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +26,13 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view){
         String name = nameText.getText().toString();
         if(name.length() > 0){
-            Group g = new Group(name, Integer.toString(group_number));
-            group_number++;
+            Group g = new Group(name, DataManager.Instance().getNextGroupID());
             g.addMember(DataManager.Instance().getUser());
             //TODO: DATABASE THING HERE -- Use the GROUP ID for the key below
-            DataManager.Instance().getGroups().put(name, g);
+            DataManager.Instance().getGroups().put(g.getGroupID(), g);
         }
+
+        Intent intent = new Intent(this, GroupMainPageActivity.class);
+        startActivity(intent);
     }
 }
