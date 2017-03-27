@@ -26,10 +26,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view){
         String name = nameText.getText().toString();
         if(name.length() > 0){
-            Group g = new Group(name, DataManager.Instance().getNextGroupID());
-            g.addMember(DataManager.Instance().getUser());
-            //TODO: DATABASE THING HERE -- Use the GROUP ID for the key below
-            DataManager.Instance().getGroups().put(g.getGroupID(), g);
+            DataManager.Instance().createGroupAndAddUser(name);
         }
 
         Intent intent = new Intent(this, GroupMainPageActivity.class);

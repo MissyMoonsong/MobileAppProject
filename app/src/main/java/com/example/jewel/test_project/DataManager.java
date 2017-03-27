@@ -158,6 +158,26 @@ public class DataManager {
         }
     }
 
+    public void createGroupAndAddUser(String groupName){
+        Group g = new Group(groupName, getNextGroupID());
+        g.addMember(DataManager.Instance().getUser());
+        //TODO: DATABASE THING HERE -- Use the GROUP ID for the key below
+        DataManager.Instance().getGroups().put(g.getGroupID(), g);
+    }
+
+    public void removeUserFromGroup(String groupID){
+        //TODO: Remove user-group membership in database
+        groups.remove(groupID);
+    }
+
+    public void addOtherUserToGroup(String groupID, String userLookup){
+        Person p = DataManager.Instance().lookUpUser(userLookup);
+        if(p != null) {
+            groups.get(groupID).addMember(p);
+            //TODO: Add person to group in database
+        }
+    }
+
     public Person lookUpUser(String nameEmail) {
         //Users stored in Firebase by Email
 

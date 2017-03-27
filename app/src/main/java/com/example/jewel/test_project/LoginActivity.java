@@ -86,13 +86,20 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, "Invalid Login", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(LoginActivity.this, EventListViewer.class);
-                                    startActivity(intent);
+                                    goToListView();
                                 }
                             }
                         });
             }
         });
+    }
+
+    public void goToListView(){
+        Intent i = new Intent(this, EventListViewer.class);
+        Bundle b = new Bundle();
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
+        i.putExtras(b);
+        startActivity(i);
     }
 }
 

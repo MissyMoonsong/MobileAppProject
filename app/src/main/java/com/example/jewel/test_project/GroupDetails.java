@@ -47,12 +47,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         if(view == btnAddMember){
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
-                Person p = DataManager.Instance().lookUpUser(name);
-                if(p != null) {
-                    myGroup.addMember(p);
-                } else{
-                    //TODO: Something about user not found
-                }
+                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name);
             }
 
             //Refresh member names
@@ -67,9 +62,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             intent.putExtras(b);
             startActivity(intent);
         } else if (view == btnLeave){
-            //TODO: Remove user-group membership in database
-            DataManager.Instance().getGroups().remove(myGroup.getGroupID());
-
+            DataManager.Instance().removeUserFromGroup(myGroup.getGroupID());
+            //Go Back
             Intent intent = new Intent(this, GroupMainPageActivity.class);
             startActivity(intent);
         }
