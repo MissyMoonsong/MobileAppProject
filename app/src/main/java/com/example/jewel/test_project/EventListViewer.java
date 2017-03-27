@@ -201,39 +201,13 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     }
 
     private void shakeResponse() {
-        // Shaking generates an event in the next week or so
-        String eventName = "Random Event";
-
-        //Start of window: 3 days out
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_MONTH, 3);
-
-        int startYear = now.get(Calendar.YEAR);
-        int startMonth = now.get(Calendar.MONTH);
-        int startDay = now.get(Calendar.DAY_OF_MONTH);
-
-        //End of window: one after start
-        now.add(Calendar.DAY_OF_MONTH, 7);
-
-        int endYear = now.get(Calendar.YEAR);
-        int endMonth = now.get(Calendar.MONTH);
-        int endDay = now.get(Calendar.DAY_OF_MONTH);
-
-        //Event duration: 1 hour
-        int duration = 60;
-
-        Calendar windowStart = new GregorianCalendar(startYear, startMonth, startDay);
-        Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
-
-        //Generate an event this schedule
-        ScheduleEvent event = s.findTimeInSchedule(windowStart, windowEnd, duration);
-
-        if (event != null) { //Event Found
-            event.changeName(eventName);
-            DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey);
-        }
-
-        fillList();
+        //Go to Auto Generate Event page
+        Bundle b = new Bundle();
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
+        Intent intent = new Intent(this, EventAutoCreate.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     //Helper method to use displayed string to find the object
