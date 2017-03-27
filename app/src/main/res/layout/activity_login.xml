@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
+    android:orientation="vertical">
 
-    tools:context="com.example.jewel.test_project.Create_Login">
+
+    android:id="@+id/InnerRelativeLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true">
+
     <ListView
         android:id="@+id/navList"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
-        android:background="#ffeeeeee"/>
+        android:background="#ffeeeeee" />
+
     <LinearLayout
-        android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/editTextEmail"
+            android:id="@+id/login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -30,7 +35,7 @@
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
@@ -38,19 +43,21 @@
             android:inputType="textPassword" />
 
         <Button
-            android:id="@+id/buttonSignup"
+            android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="Signup" />
+            android:text="LOG IN" />
+
 
         <Button
-            android:id="@+id/buttonSwitchToLogin"
+            android:id="@+id/buttonSwitchToRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="Already Registered?" />
+            android:text="Need To Register?" />
 
     </LinearLayout>
+
 
 </android.support.v4.widget.DrawerLayout>

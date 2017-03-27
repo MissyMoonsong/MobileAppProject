@@ -1,10 +1,7 @@
 package com.example.jewel.test_project;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -20,8 +17,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -31,17 +26,15 @@ import java.util.List;
  * to passwords are accidental
  */
 
-public class EventListViewer extends AppCompatActivity implements View.OnClickListener {
+public class EventListViewer extends AppCompatActivity implements View.OnClickListener{
 
     //List of events that will be displayed
-    private List<ScheduleEvent> events = new ArrayList<>();
+    List<ScheduleEvent> events = new ArrayList<>();
     //List view to load events into
-    private ListView listView;
+    ListView listView;
+
     //Buttons
     Button btnManual, btnAuto;
-
-    private String scheduleType = "", scheduleKey = "";
-    private Schedule s;
 
     //for the menu
     private ListView mDrawerList;
@@ -50,26 +43,21 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     private DrawerLayout mDrawerLayout;
     private String mActivityTitle;
 
-    // Put this stuff wherever the shakes are used!
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
-    private ShakeDetector mShakeDetector;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_view);
 
         //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
-        scheduleType = getIntent().getExtras().getString("ScheduleType");
+        String type = getIntent().getExtras().getString("ScheduleType");
 
-        if (scheduleType.equals("User")) {
-             s = DataManager.Instance().getUser().getSchedule();
+        if(type.equals("User")){
+            Schedule s = DataManager.Instance().getUser().getSchedule();
             events = s.getAllEvents();
-        } else if (scheduleType.equals("Group")) {
-            scheduleKey = getIntent().getExtras().getString("ScheduleKey");
-            s = DataManager.Instance().getGroups().get(scheduleKey).getGroupSchedule();
-        } else if (scheduleType.equals("Friend")) {
+        } else if (type.equals("Group")){
+            String key = getIntent().getExtras().getString("ScheduleKey");
+            Schedule s = DataManager.Instance().getGroups().get(key).getGroupSchedule();
+        } else if (type.equals("Friend")){
             //TODO: Friend schedule
         }
 
@@ -83,64 +71,41 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
                 //Find the string displayed with the clicked item
                 String item = ((TextView) view).getText().toString();
 
-                //Find out which event this was based on the text
+                //Find out which password this was based on the text
                 ScheduleEvent event = findItemByString(item);
 
                 //Send the eventID of the event to be viewed to the details view
                 Bundle b = new Bundle();
-                b.putString("ScheduleType", scheduleType);
-                b.putString("ScheduleKey", scheduleKey);
-                b.putString("EventID", Integer.toString(event.getEventID()));
+                b.putInt("EventID", event.getEventID());
 
-                toEventDetails(b);
+                goToEventDetails(b);
             }
         });
 
-        btnAuto = (Button) findViewById(R.id.btn_auto_event);
+        btnAuto = (Button)findViewById(R.id.btn_auto_event);
         btnAuto.setOnClickListener(this);
-        btnManual = (Button) findViewById(R.id.btn_manual_event);
+        btnManual = (Button)findViewById(R.id.btn_manual_event);
         btnManual.setOnClickListener(this);
 
         //menu
-        mDrawerList = (ListView) findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView)findViewById(R.id.navList);mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-        mDrawerList.bringToFront();
-        mDrawerLayout.requestLayout();
         addDrawerItems();
         setupDrawer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        //Put this in onCreate in any activity needing the shake event!
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager
-                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mShakeDetector = new ShakeDetector();
-        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
-
-            @Override
-            public void onShake(int count) {
-                shakeResponse();
-            }
-        });
     }
 
     //for menu
     private void addDrawerItems() {
-        String[] navArray = {"Home", "Self", "Groups", "Friends", "About us"};
-        final Class[] classArray = {Register.class, EventListViewer.class, GroupMainPageActivity.class, Register.class, Register.class};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navArray);
+        String[] osArray = {"Home", "Self", "Groups", "Friends", "About us" };
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(EventListViewer.this, classArray[position]);
-                Bundle b = new Bundle();
-                b.putString("ScheduleType", "User");
-                intent.putExtras(b);
-                startActivity(intent);
+                Toast.makeText(EventListViewer.this, "Time for an upgrade!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -169,7 +134,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private void fillList() {
+    private void fillList(){
         //Grab the list view
         listView = (ListView) findViewById(R.id.event_list);
 
@@ -181,10 +146,10 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     }
 
     //Helper method because the adapter needs an array of PasswordEntry, not array list
-    private ScheduleEvent[] makeArray(List<ScheduleEvent> list) {
+    private ScheduleEvent[] makeArray(List<ScheduleEvent> list){
         ScheduleEvent[] array = new ScheduleEvent[list.size()];
 
-        for (int i = 0; i < list.size(); i++) {
+        for(int i =0; i < list.size(); i++){
             array[i] = list.get(i);
         }
 
@@ -192,66 +157,19 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onResume() {
+    public void onResume(){
         super.onResume();
         //Refresh the list view
-        fillList();
-
-        //Put in the onResume of anything use the shake event!
-        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
-    }
-
-    public void toEventDetails(Bundle b) {
-        Intent intent = new Intent(this, EventDetails.class);
-        intent.putExtras(b);
-        startActivity(intent);
-    }
-
-    private void shakeResponse() {
-        // Shaking generates an event in the next week or so
-        String eventName = "Random Event";
-
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_MONTH, 3);
-
-        int startYear = now.get(Calendar.YEAR);
-        int startMonth = now.get(Calendar.MONTH);
-        int startDay = now.get(Calendar.DAY_OF_MONTH);
-
-        now.add(Calendar.DAY_OF_MONTH, 7);
-
-        int endYear = now.get(Calendar.YEAR);
-        int endMonth = now.get(Calendar.MONTH);
-        int endDay = now.get(Calendar.DAY_OF_MONTH);
-
-        int duration = 60;
-
-        //Generate an event this schedule
-        Calendar windowStart = new GregorianCalendar(startYear, startMonth, startDay);
-        Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
-
-        ScheduleEvent event = s.findTimeInSchedule(windowStart, windowEnd, duration);
-        if (event != null) {
-            event.changeName(eventName);
-
-            //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
-            s.addEvent(event);
-            if (scheduleType.equals("Group")) {
-                DataManager.Instance().getGroups().get(scheduleKey).rebuildGroupSchedule();
-                //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
-            }
-        }
-
         fillList();
     }
 
     //Helper method to use displayed string to find the object
-    private ScheduleEvent findItemByString(String itemToString) {
+    private ScheduleEvent findItemByString(String itemToString){
         ScheduleEvent result = null;
 
-        for (ScheduleEvent e : events) {
+        for(ScheduleEvent e : events){
             //Note: password's toString is what was displayed in the list
-            if (e.toString().equalsIgnoreCase(itemToString)) {
+            if(e.toString().equalsIgnoreCase(itemToString)){
                 result = e;
                 break;
             }
@@ -260,38 +178,37 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         return result;
     }
 
+    //Bundle should have the 4 values for the detail view
+    private void goToEventDetails(Bundle b){
+        //TODO: make the view to see an individual event
+        //Intent intent = new Intent(this, PasswordDetails.class);
+        //intent.putExtras(b);
+        //startActivity(intent);
+    }
+
     @Override
-    public void onClick(View view) {
-        if (view == btnAuto) {
-            Bundle b = new Bundle();
-            b.putString("ScheduleType", scheduleType);
-            b.putString("ScheduleKey", scheduleKey);
-
-            Intent intent = new Intent(this, EventAutoCreate.class);
-            intent.putExtras(b);
-            startActivity(intent);
-
-        } else if (view == btnManual) {
-            //TODO: Go to manual-create event activity
+    public void onClick(View view){
+        if(view == btnAuto){
+            //TODO: Go to Auto-generate event actviity
             //Intent intent = new Intent(this, PasswordDetails.class);
             //intent.putExtras(b);
             //startActivity(intent);
+
+        } else if (view == btnManual) {
+            //TODO: Go to manual-create even activity
+            Intent intent = new Intent(this, CreateEvent.class);
+            //intent.putExtras(b);
+            startActivity(intent);
         }
     }
 
     @Override
-    public void onPause() {
+    public void onPause(){
         //End activity if the user leaves the app
         super.onPause();
         finish();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        //Put in the onStop of anything use the shake event!
-        mSensorManager.unregisterListener(mShakeDetector);
-    }
 
     //menu
     @Override
