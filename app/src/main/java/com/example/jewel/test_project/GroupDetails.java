@@ -51,7 +51,9 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         if(view == btnAddMember){
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
-                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name);
+
+                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref);
             }
 
             //Refresh member names

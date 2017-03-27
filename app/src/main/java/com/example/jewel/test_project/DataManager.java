@@ -46,14 +46,20 @@ public class DataManager {
     private Map<String, Group> groups;
 
     private DataManager() {
-        createDummySchedule(); //TODO: Remove this when database works
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
+        createDummySchedule(); //TODO: Remove this when database works
+
+        DatabaseReference users = ref.child("users");
+
+
+
+
         ref.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        //refreshFromDatabase(dataSnapshot);
+                        //refreshFromDatabase(dataSnapshot);]
                     }
 
                     @Override
@@ -89,7 +95,7 @@ public class DataManager {
 
     //TODO: Replace this with something for loading real schedules or something
     private void createDummySchedule() {
-        user = new Person("Phone Owner", getNextUserID());
+        user = new Person("Phone Owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
         groups = new HashMap<>();
 
         Calendar start1 = Calendar.getInstance();
@@ -142,10 +148,9 @@ public class DataManager {
     public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey, Firebase ref) {
         //Store values to firebase
         Firebase pushedEventRef = ref.child("Event").push();
-        pushedEventRef.setValue(event);
-        String postId = pushedEventRef.getKey();
-
-        event.setEventID(postId);
+        pushedEventRef.setValue(event.toDatabaseEvent());
+        String eventId = pushedEventRef.getKey();
+        event.setEventID(eventId);
 
         if (scheduleType.equals("Group")) { //Group so add to each member
             for (Person p : groups.get(groupKey).getMembers()) {
@@ -159,28 +164,56 @@ public class DataManager {
             groups.get(groupKey).rebuildGroupSchedule();
         } else { //Single user schedule -- THIS user
             user.getSchedule().addEvent(event);
-            //TODO: Add event to database for the phone user
+            //TODO: add event to EACH INDIVIDUAL
+            DatabaseScheduleEvent temp = new DatabaseScheduleEvent();
+            temp.setEventID(eventId);
+            ref.child("Schedules").child(user.getUserID()).push().setValue(temp);
+
 
         }
     }
 
-    public void createGroupAndAddUser(String groupName){
-        Group g = new Group(groupName, getNextGroupID());
+    public void createGroupAndAddUser(String groupName, Firebase gref){
+        Firebase pushedGroupRef = gref.child("Group").push();
+        DatabaseGroup dgroup = new DatabaseGroup();
+        dgroup.setGroupName(groupName);
+        pushedGroupRef.setValue(dgroup);
+        String groupId = pushedGroupRef.getKey();
+
+        addUserToGroupMembership(user.getUserID(), groupId, gref);
+        addGroupToUserMembership(user.getUserID(), groupId, gref);
+
+        Group g = new Group(groupName, groupId);
         g.addMember(DataManager.Instance().getUser());
-        //TODO: DATABASE THING HERE -- Use the GROUP ID for the key below
         DataManager.Instance().getGroups().put(g.getGroupID(), g);
     }
+
+    private void addUserToGroupMembership(String userID, String groupID, Firebase ref){
+        Firebase pushedMembershipRef = ref.child("MembershipUserToGroup").child(userID).push();
+        DatabaseUserToGroup temp = new DatabaseUserToGroup();
+        temp.setGroupID(groupID);
+        pushedMembershipRef.setValue(temp);
+    }
+
+    private void addGroupToUserMembership(String userID, String groupID, Firebase ref){
+        Firebase pushedMembershipRef = ref.child("MembershipGroupToUSer").child(groupID).push();
+        DatabaseGroupToUser temp = new DatabaseGroupToUser();
+        temp.setUserID(userID);
+        pushedMembershipRef.setValue(temp);
+    }
+
 
     public void removeUserFromGroup(String groupID){
         //TODO: Remove user-group membership in database
         groups.remove(groupID);
     }
 
-    public void addOtherUserToGroup(String groupID, String userLookup){
-        Person p = DataManager.Instance().lookUpUser(userLookup);
+    public void addOtherUserToGroup(String groupID, String userLookup, Firebase ref){
+        Person p = DataManager.Instance().lookUpUser(userLookup, ref);
         if(p != null) {
             groups.get(groupID).addMember(p);
             //TODO: Add person to group in database
+
         }
     }
 
@@ -190,12 +223,13 @@ public class DataManager {
         //TODO: Remove the connection between this event and user in the database
     }
 
-    public Person lookUpUser(String nameEmail) {
+    public Person lookUpUser(String nameEmail, Firebase ref) {
         //Users stored in Firebase by Email
 
         //TODO: Replace this with actually getting info from DB
         //Return NULL if no such user exists
 
+        ref.child("users");
         return new Person(nameEmail, getNextUserID());
     }
 
