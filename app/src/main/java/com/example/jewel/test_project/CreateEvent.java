@@ -19,22 +19,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.widget.ToggleButton;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 
 /**
  * Created by allis on 3/26/2017.
  */
 
 public class CreateEvent extends AppCompatActivity {
-
+    private String scheduleType, groupKey;
+    private Schedule schedule;
 
     private EditText event_name;
     private EditText start_hour, start_min;
@@ -48,6 +45,15 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        //Getting extras from bundle
+        scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
+        if (scheduleType.equals("User")) {
+            schedule = DataManager.Instance().getUser().getSchedule();
+        } else if (scheduleType.equals("Group")) {
+            groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
+            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
+        }
 
         //Initialize Views
         event_name = (EditText) findViewById(R.id.event_name);
@@ -79,7 +85,6 @@ public class CreateEvent extends AppCompatActivity {
 
                 //Creating firebase object
                 Firebase ref = new Firebase(Config.FIREBASE_URL);
-
 
                 //Getting values to store
                 String evname = event_name.getText().toString().trim();
@@ -124,11 +129,12 @@ public class CreateEvent extends AppCompatActivity {
                 event.setRFriday(iFri);
                 event.setRSaturday(iSat);
 
-                Firebase eventRef = ref.child("Event");
-                eventRfef.push().setValue(event);
-
                 //Store values to firebase
+                ref.child("Event").setValue(event);
 
+                //TODO: add event to mutiple schedules if this a group (scheduletype)
+
+                //TODO: Add event to schedule within app
             }
         });
     }

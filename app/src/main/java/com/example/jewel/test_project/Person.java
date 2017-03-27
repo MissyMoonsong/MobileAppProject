@@ -8,14 +8,12 @@ package com.example.jewel.test_project;
 public class Person {
     private Schedule schedule;
     private String name;
-    private int UserID; //TODO: This is supposed to be the database key. Change type if needed.
-    //TODO: Add everything else
+    private int userID;
 
     public Person(String name,int id){
         this.name = name;
-        //TODO: Change naming?
         schedule = new Schedule(name + "'s Schedule", id);
-        UserID = id;
+        userID = id;
     }
 
     public Schedule getSchedule(){
@@ -28,6 +26,6 @@ public class Person {
     }
 
     public int getUserID(){
-        return  UserID;
+        return userID;
     }
 }

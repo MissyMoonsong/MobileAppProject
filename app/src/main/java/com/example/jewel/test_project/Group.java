@@ -16,8 +16,6 @@ public class Group {
     private List<Person> members;
     private Schedule groupSchedule;
 
-    //TODO: Add everything else
-
     public Group(String name, int id){
         this.name = name;
         members = new ArrayList<>();
@@ -53,12 +51,6 @@ public class Group {
     public void addMember(Person p){
         members.add(p);
         addPersonalSchedule(p.getSchedule());
-    }
-
-    public void removeMember(Person p){
-        members.remove(p);
-        //Rebuild without this member
-        rebuildGroupSchedule();
     }
 
     public Schedule getGroupSchedule(){

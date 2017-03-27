@@ -90,7 +90,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(Register.this, classArray[position]);
                 Bundle b = new Bundle();
-                b.putString("ScheduleType", "User");
+                b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -168,7 +168,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         Intent i = new Intent(this, EventListViewer.class);
         Bundle b = new Bundle();
-        b.putString("ScheduleType", "User");
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
         i.putExtras(b);
         startActivity(i);
     }

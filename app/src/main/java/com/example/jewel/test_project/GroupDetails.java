@@ -29,7 +29,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
 
         txtMemberName = (EditText)findViewById(R.id.txt_member_name);
 
-        String groupKey = getIntent().getExtras().getString("GroupKey");
+        String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
         myGroup = DataManager.Instance().getGroups().get(groupKey);
 
         userList = (TextView)findViewById(R.id.txt_user_list);
@@ -43,16 +43,18 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
                 //TODO: Lookup person through DB instead
-                Person p = DataManager.Instance().findPersonByName(name);
+                Person p = new Person(name, 2);
                 if(p != null) {
                     myGroup.addMember(p);
+                } else{
+                    //TODO: Something about user not found
                 }
             }
 
         } else if (view == btnGoSchedule){
             Bundle b = new Bundle();
-            b.putString("ScheduleType", "Group");
-            b.putInt("ScheduleKey", myGroup.getGroupID());
+            b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
+            b.putInt(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
 
             Intent intent = new Intent(this, EventListViewer.class);
             intent.putExtras(b);
@@ -62,7 +64,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             DataManager.Instance().getGroups().remove(myGroup);
 
             Bundle b = new Bundle();
-            b.putString("ScheduleType", "User");
+            b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
 
             Intent intent = new Intent(this, EventListViewer.class);
             intent.putExtras(b);

@@ -23,15 +23,17 @@ public class DataManager {
     //These two objects are used to format the Calendar.getDate() objects into readable strings
     public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
     public static SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("hh:mm aaa");
+    //Tons of activities use these keys, so they reference this one
+    public static String SCHEDULE_TYPE_KEY = "ScheduleType"; //User or Group
+    public static String GROUP_ID_KEY = "GroupID"; //key to access correct Group
+    public static String EVENT_ID_KEY = "EventID"; //key to access correct Event
 
     private Person user;
-    private Map<String, Person> contacts;
     private Map<String, Group> groups;
 
     private DataManager(){
-        //TODO: Replace with stuff to actually get this info
+        //TODO: Replace with database stuff to actually get this info
         user = new Person("Phone Owner", 0);
-        contacts = new HashMap<>();
         groups = new HashMap<>();
 
         createDummySchedule();
@@ -48,27 +50,11 @@ public class DataManager {
         return user;
     }
 
-    public Map<String, Person> getContacts(){
-        return contacts;
-    }
-
     public Map<String, Group> getGroups(){
         return groups;
     }
 
-    public Person findPersonByName(String name){
-        //TODO: look up in database instead
-
-        for(Person p: contacts.values()){
-            if(p.toString().equals(name)){
-                return p;
-            }
-        }
-        return null;
-    }
-
-
-    //TODO: Replace this with something for loading real schdules or something
+    //TODO: Replace this with something for loading real schedules or something
     private void createDummySchedule(){
         Calendar start1 = Calendar.getInstance();
         Calendar end1 = Calendar.getInstance();
