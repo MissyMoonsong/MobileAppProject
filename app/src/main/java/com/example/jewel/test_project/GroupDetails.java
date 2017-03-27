@@ -37,7 +37,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
 
     private void fillNames(){
         userList = (TextView)findViewById(R.id.txt_user_list);
-        String text = myGroup.getName() + "\n" + myGroup.getMemberList();
+        String text = "Group: " + myGroup.getName() + "\n" + myGroup.getMemberList();
         userList.setText(text);
     }
 
