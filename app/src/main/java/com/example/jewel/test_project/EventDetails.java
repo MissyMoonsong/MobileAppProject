@@ -39,6 +39,16 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         btnBack.setOnClickListener(this);
 
         fillInfo();
+        adjustButtons();
+    }
+
+    private void adjustButtons(){
+        if (scheduleType.equals("User")) {
+            btnDelete.setEnabled(true);
+        } else if (scheduleType.equals("Group")) {
+            //Delete makes no sense when a Group schedule is based on members
+            btnDelete.setEnabled(false);
+        }
     }
 
     private void fillInfo() {
@@ -67,7 +77,7 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         } else if (view == btnDelete) {
             //Delete this event
             schedule.removeEvent(schedule.findEventByID(eventID));
-            //TODO: Delete this event - group and/or user combo from database
+            //TODO: Delete this event - user combo from database
 
             //Go back to list view
             startActivity(intent);

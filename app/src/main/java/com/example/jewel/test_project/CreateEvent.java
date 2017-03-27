@@ -75,20 +75,10 @@ public class CreateEvent extends AppCompatActivity {
                 //Store values to firebase
                 ref.child("Event").setValue(event);
 
-                if (scheduleType.equals("Group")) {
-                    Group g = DataManager.Instance().getGroups().get(groupKey);
-                    for (Person p : g.getMembers()) {
-                        String userID = p.getUserID();
-                        //TODO: Database stuff: connect to this person's user id if not already
-                    }
-                } else {
-                    //TODO: Was a single user schedule
-                }
-
                 //Add event to app -- no DB variant
                 ScheduleEvent se = buildScheduleEventFromEvent(event);
-                se.setEventID(DataManager.Instance().getNextEventID());
-                schedule.addEvent(se);
+
+                DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey);
 
                 //Go to list again
                 returnToList();
@@ -97,7 +87,7 @@ public class CreateEvent extends AppCompatActivity {
     }
 
 
-    private void setViews(){
+    private void setViews() {
         //Initialize Views
         event_name = (EditText) findViewById(R.id.event_name);
         start_hour = (EditText) findViewById(R.id.start_hour);
@@ -120,7 +110,7 @@ public class CreateEvent extends AppCompatActivity {
         create_event = (Button) findViewById(R.id.button_create_event);
     }
 
-    private Event fillEvent(){
+    private Event fillEvent() {
         //Getting values to store
         String evname = event_name.getText().toString().trim();
         Integer shour = Integer.parseInt(start_hour.getText().toString().trim());
@@ -167,7 +157,7 @@ public class CreateEvent extends AppCompatActivity {
         return event;
     }
 
-    private void returnToList(){
+    private void returnToList() {
         //Go back to ListView
         Bundle b = new Bundle();
         b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);

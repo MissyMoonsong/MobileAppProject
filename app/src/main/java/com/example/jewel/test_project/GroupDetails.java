@@ -31,6 +31,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
 
         String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
         myGroup = DataManager.Instance().getGroups().get(groupKey);
+        myGroup.rebuildGroupSchedule(); //Refresh the group
 
         fillNames();
     }
@@ -46,8 +47,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         if(view == btnAddMember){
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
-                //TODO: Lookup person through DB instead
-                Person p = new Person(name, DataManager.Instance().getNextUserID());
+                Person p = DataManager.Instance().lookUpUser(name);
                 if(p != null) {
                     myGroup.addMember(p);
                 } else{

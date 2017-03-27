@@ -22,9 +22,9 @@ import java.util.Map;
  * Created by Jewel on 3/19/2017.
  * This class is meant to hold references to our groups, people, etc. so that they aren't
  * tied to any one activity.
- *
+ * <p>
  * This is a Singleton.
- *
+ * <p>
  * In the future, this class will probably have to interact with the database.
  * It stores all schedules in Key, Value pairs
  */
@@ -44,27 +44,27 @@ public class DataManager {
     private Person user;
     private Map<String, Group> groups;
 
-    private DataManager(){
+    private DataManager() {
         createDummySchedule();
     }
 
-    public static DataManager Instance(){
-        if (instance == null){
+    public static DataManager Instance() {
+        if (instance == null) {
             instance = new DataManager();
         }
         return instance;
     }
 
-    public Person getUser(){
+    public Person getUser() {
         return user;
     }
 
-    public Map<String, Group> getGroups(){
+    public Map<String, Group> getGroups() {
         return groups;
     }
 
     //TODO: Replace this with something for loading real schedules or something
-    private void createDummySchedule(){
+    private void createDummySchedule() {
         user = new Person("Phone Owner", getNextUserID());
         groups = new HashMap<>();
 
@@ -73,10 +73,10 @@ public class DataManager {
         Calendar start2 = Calendar.getInstance();
         Calendar end2 = Calendar.getInstance();
 
-        start1.set(2017,3, 10, 0,0);
+        start1.set(2017, 3, 10, 0, 0);
         end1.set(2017, 3, 17, 1, 0);
 
-        start2.set(2017,3, 11, 8, 30);
+        start2.set(2017, 3, 11, 8, 30);
         end2.set(2017, 3, 11, 9, 0);
 
 
@@ -94,7 +94,7 @@ public class DataManager {
         Person friend = new Person("Friend", getNextUserID());
         Calendar startF = Calendar.getInstance();
         Calendar endF = Calendar.getInstance();
-        startF.set(2017,3, 10, 1,0);
+        startF.set(2017, 3, 10, 1, 0);
         endF.set(2017, 3, 17, 2, 0);
 
         ScheduleEvent oneTimeF = new ScheduleEvent("Friend's Event", startF, endF);
@@ -109,19 +109,55 @@ public class DataManager {
         g.addMember(friend);
     }
 
-    public String getNextEventID(){
+    /***
+     * This also gives the Event its EventID, maybe
+     * @param event
+     * @param scheduleType
+     * @param groupKey
+     */
+    public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey) {
+        //TODO: Maybe remove this when DB is established
+        event.setEventID(DataManager.Instance().getNextEventID());
+
+        if (scheduleType.equals("Group")) { //Group so add to each member
+            for (Person p : groups.get(groupKey).getMembers()) {
+                //Add event for each person
+                p.getSchedule().addEvent(event);
+                //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
+                String userID = p.getUserID();
+            }
+
+            //Update to new group view
+            groups.get(groupKey).rebuildGroupSchedule();
+        } else { //Single user schedule -- THIS user
+            //TODO: Add event to database for the phone user
+            user.getSchedule().addEvent(event);
+        }
+    }
+
+    public Person lookUpUser(String nameEmail) {
+        //Users stored in Firebase by Email
+
+        //TODO: Replace this with actually getting info from DB
+        //Return NULL if no such user exists
+
+        return new Person(nameEmail, getNextUserID());
+    }
+
+
+    public String getNextEventID() {
         String val = Integer.toString(nextEventID);
         nextEventID++;
         return val;
     }
 
-    public String getNextGroupID(){
+    public String getNextGroupID() {
         String val = Integer.toString(nextGroupID);
         nextGroupID++;
         return val;
     }
 
-    public String getNextUserID(){
+    public String getNextUserID() {
         String val = Integer.toString(nextUserID);
         nextUserID++;
         return val;

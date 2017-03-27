@@ -67,13 +67,10 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
         Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
 
         ScheduleEvent event = schedule.findTimeInSchedule(windowStart, windowEnd, duration);
-        event.changeName(eventName);
-        event.setEventID(DataManager.Instance().getNextEventID());
-        //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
-        schedule.addEvent(event);
-        if (scheduleType.equals("Group")) {
-            DataManager.Instance().getGroups().get(groupKey).rebuildGroupSchedule();
-            //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
+
+        if (event != null) { //Event Found
+            event.changeName(eventName);
+            DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey);
         }
 
         //Go back to ListView

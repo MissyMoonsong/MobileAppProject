@@ -63,11 +63,12 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
         if (scheduleType.equals("User")) {
              s = DataManager.Instance().getUser().getSchedule();
-            events = s.getAllEvents();
         } else if (scheduleType.equals("Group")) {
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
             s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
+
+        events = s.getAllEvents();
 
         fillList();
 
@@ -84,9 +85,9 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
                 //Send the eventID of the event to be viewed to the details view
                 Bundle b = new Bundle();
-                b.putString("ScheduleType", scheduleType);
-                b.putString("ScheduleKey", groupKey);
-                b.putString("EventID",event.getEventID());
+                b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+                b.putString(DataManager.GROUP_ID_KEY, groupKey);
+                b.putString(DataManager.EVENT_ID_KEY,event.getEventID());
 
                 toEventDetails(b);
             }
@@ -229,21 +230,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
         if (event != null) { //Event Found
             event.changeName(eventName);
-            event.setEventID(DataManager.Instance().getNextEventID());
-
-            if (scheduleType.equals("Group")) {
-                for (Person p : DataManager.Instance().getGroups().get(groupKey).getMembers()){
-                    //Add event for each person
-                    p.getSchedule().addEvent(event);
-                    //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
-                }
-
-                //Update to new group view
-                DataManager.Instance().getGroups().get(groupKey).rebuildGroupSchedule();
-            } else { //Single user schedule
-                //TODO: Add event to database for single user
-                s.addEvent(event);
-            }
+            DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey);
         }
 
         fillList();
