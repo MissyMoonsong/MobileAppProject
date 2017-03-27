@@ -1,6 +1,7 @@
 package com.example.jewel.test_project;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -140,11 +141,11 @@ public class DataManager {
      */
     public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey, Firebase ref) {
         //Store values to firebase
-        ref.child("Event").push().setValue(event);
-        //TODO: Fetch the ID from that post
+        Firebase pushedEventRef = ref.child("Event").push();
+        pushedEventRef.setValue(event);
+        String postId = pushedEventRef.getKey();
 
-
-        event.setEventID(DataManager.Instance().getNextEventID());
+        event.setEventID(postId);
 
         if (scheduleType.equals("Group")) { //Group so add to each member
             for (Person p : groups.get(groupKey).getMembers()) {
