@@ -53,7 +53,6 @@ public class CalendarDay {
     //Note: eventDuration might be better represented as a different data type
     public ScheduleEvent findTimeInDay(int duration){
         if(blocksInDay.size() == 0) {
-            //TODO: TAKE THIS CODE TO THE MAIN VERSION, GENIUS
             //This entire day is free
             //Create two times, representing the start and end of this event
             Calendar start = (Calendar)date.clone();

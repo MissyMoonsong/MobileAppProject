@@ -75,9 +75,7 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
 
         } else if (view == btnDelete) {
-            //Delete this event
-            schedule.removeEvent(schedule.findEventByID(eventID));
-            //TODO: Delete this event - user combo from database
+            DataManager.Instance().deleteUserEvent(eventID);
 
             //Go back to list view
             startActivity(intent);

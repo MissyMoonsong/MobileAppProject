@@ -178,6 +178,12 @@ public class DataManager {
         }
     }
 
+    public void deleteUserEvent(String eventID){
+        //Deletes the event from THIS USER'S schedule
+        user.getSchedule().removeEvent(user.getSchedule().findEventByID(eventID));
+        //TODO: Remove the connection between this event and user in the database
+    }
+
     public Person lookUpUser(String nameEmail) {
         //Users stored in Firebase by Email
 
