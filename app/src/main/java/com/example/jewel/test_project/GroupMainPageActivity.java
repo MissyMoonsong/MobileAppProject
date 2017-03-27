@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,6 +52,8 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
+
+        Firebase.setAndroidContext(this);
 
         groups = new ArrayList<>(DataManager.Instance().getGroups().values());
 

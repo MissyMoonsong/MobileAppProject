@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 public class EventDetails extends AppCompatActivity implements View.OnClickListener {
     TextView txtName, txtWindow, txtTime, txtRecurrence;
     Button btnDelete, btnBack;
@@ -17,6 +19,8 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
+
+        Firebase.setAndroidContext(this);
 
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
         if (scheduleType.equals("User")) {

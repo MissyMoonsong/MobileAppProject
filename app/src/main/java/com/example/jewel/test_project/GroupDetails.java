@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 public class GroupDetails extends AppCompatActivity implements View.OnClickListener{
     Button btnAddMember, btnGoSchedule, btnLeave;
     TextView userList;
@@ -19,6 +21,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
+
+        Firebase.setAndroidContext(this);
 
         btnAddMember = (Button)findViewById(R.id.btn_group_add_member);
         btnAddMember.setOnClickListener(this);

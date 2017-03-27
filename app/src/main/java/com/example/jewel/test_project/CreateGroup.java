@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.client.Firebase;
+
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener{
     Button createButton;
     EditText nameText;
@@ -15,6 +17,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+
+        Firebase.setAndroidContext(this);
 
         createButton = (Button)findViewById(R.id.btn_create_group);
         createButton.setOnClickListener(this);

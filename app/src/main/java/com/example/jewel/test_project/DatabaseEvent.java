@@ -8,7 +8,7 @@ import android.widget.ToggleButton;
  * Created by allis on 3/26/2017.
  */
 
-public class Event {
+public class DatabaseEvent {
 
     private String event_name;
     private Integer start_hour, start_min;
@@ -17,7 +17,7 @@ public class Event {
     private Integer end_month, end_day, end_year;
     private Boolean r_sunday, r_monday, r_tuesday, r_wednesday, r_thursday, r_friday, r_saturday;
 
-    public Event() {
+    public DatabaseEvent() {
       /*Blank default constructor essential for Firebase*/
     }
 

@@ -2,28 +2,13 @@ package com.example.jewel.test_project;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 
@@ -70,15 +55,12 @@ public class CreateEvent extends AppCompatActivity {
                 //Creating firebase object
                 Firebase ref = new Firebase(Config.FIREBASE_URL);
 
-                Event event = fillEvent();
-
-                //Store values to firebase
-                ref.child("Event").setValue(event);
+                DatabaseEvent event = fillEvent();
 
                 //Add event to app -- no DB variant
                 ScheduleEvent se = buildScheduleEventFromEvent(event);
 
-                DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey);
+                DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey, ref);
 
                 //Go to list again
                 returnToList();
@@ -110,7 +92,7 @@ public class CreateEvent extends AppCompatActivity {
         create_event = (Button) findViewById(R.id.button_create_event);
     }
 
-    private Event fillEvent() {
+    private DatabaseEvent fillEvent() {
         //Getting values to store
         String evname = event_name.getText().toString().trim();
         Integer shour = Integer.parseInt(start_hour.getText().toString().trim());
@@ -132,7 +114,7 @@ public class CreateEvent extends AppCompatActivity {
         Boolean iSat = r_saturday.isChecked();
 
         //Create Event Object
-        Event event = new Event();
+        DatabaseEvent event = new DatabaseEvent();
 
         //Add Values
         event.setEventName(evname);
@@ -168,7 +150,7 @@ public class CreateEvent extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public ScheduleEvent buildScheduleEventFromEvent(Event ev) {
+    public ScheduleEvent buildScheduleEventFromEvent(DatabaseEvent ev) {
         String eName = ev.getEventName();
 
         int sYear = ev.getStartYear();

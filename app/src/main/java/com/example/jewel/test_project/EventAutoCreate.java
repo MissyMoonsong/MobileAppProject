@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.client.Firebase;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -22,6 +24,8 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_auto_create);
+
+        Firebase.setAndroidContext(this);
 
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
         if (scheduleType.equals("User")) {
@@ -70,7 +74,9 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
 
         if (event != null) { //Event Found
             event.changeName(eventName);
-            DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey);
+            //Creating firebase object
+            Firebase ref = new Firebase(Config.FIREBASE_URL);
+            DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey, ref);
         }
 
         //Go back to ListView

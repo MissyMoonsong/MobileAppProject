@@ -170,9 +170,9 @@ public class ScheduleEvent {
         return false;
     }
 
-    public Event toDatabaseEvent(){
+    public DatabaseEvent toDatabaseEvent(){
         //Create Event Object
-        Event event = new Event();
+        DatabaseEvent event = new DatabaseEvent();
 
         //Add Values
         event.setEventName(eventName);
