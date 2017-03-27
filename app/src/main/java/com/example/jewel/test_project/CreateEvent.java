@@ -30,7 +30,8 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 
 public class CreateEvent extends AppCompatActivity {
-
+    private String scheduleType, groupKey;
+    private Schedule schedule;
 
     private EditText event_name;
     private EditText start_hour, start_min;
@@ -44,6 +45,15 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        //Getting extras from bundle
+        scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
+        if (scheduleType.equals("User")) {
+            schedule = DataManager.Instance().getUser().getSchedule();
+        } else if (scheduleType.equals("Group")) {
+            groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
+            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
+        }
 
         //Initialize Views
         event_name = (EditText) findViewById(R.id.event_name);
@@ -121,6 +131,10 @@ public class CreateEvent extends AppCompatActivity {
 
                 //Store values to firebase
                 ref.child("Event").setValue(event);
+
+                //TODO: add event to mutiple schedules if this a group (scheduletype)
+
+                //TODO: Add event to schedule within app
             }
         });
     }

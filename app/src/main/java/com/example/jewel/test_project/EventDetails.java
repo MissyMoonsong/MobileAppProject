@@ -7,12 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class EventDetails extends AppCompatActivity implements View.OnClickListener {
     TextView txtName, txtWindow, txtTime, txtRecurrence;
     Button btnDelete, btnBack;
-    String scheduleType, scheduleKey, eventID;
+    String scheduleType, groupKey, eventID;
     Schedule schedule;
 
     @Override
@@ -20,17 +18,15 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
-        scheduleType = getIntent().getExtras().getString("ScheduleType");
+        scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
         if (scheduleType.equals("User")) {
             schedule = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
-            scheduleKey = getIntent().getExtras().getString("ScheduleKey");
-            schedule = DataManager.Instance().getGroups().get(scheduleKey).getGroupSchedule();
-        } else if (scheduleType.equals("Friend")) {
-            //TODO: Friend stuff
+            groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
+            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
-        eventID = getIntent().getExtras().getString("EventID");
+        eventID = getIntent().getExtras().getString(DataManager.EVENT_ID_KEY);
 
         txtName = (TextView) findViewById(R.id.txt_details_event_name);
         txtRecurrence = (TextView) findViewById(R.id.txt_details_event_recurrence);
@@ -58,8 +54,8 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         //Prepare to go back to list view
         Bundle b = new Bundle();
-        b.putString("ScheduleType", scheduleType);
-        b.putString("ScheduleKey", scheduleKey);
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
 
         Intent intent = new Intent(this, EventListViewer.class);
         intent.putExtras(b);

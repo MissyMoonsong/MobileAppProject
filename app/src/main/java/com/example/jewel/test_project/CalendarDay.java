@@ -42,10 +42,6 @@ public class CalendarDay {
         }
     }
 
-    public void clearBlocks(){
-        blocksInDay.clear();
-    }
-
     public List<ScheduleBlock> getBlocksInDay(){
         return  blocksInDay;
     }
@@ -93,9 +89,7 @@ public class CalendarDay {
         }
 
         //Assemble the start and end time into an Event
-        ScheduleEvent result = new ScheduleEvent("Generated Event", start, end);
-
-        return result;
+        return new ScheduleEvent("Generated Event", start, end);
     }
 
     @Override

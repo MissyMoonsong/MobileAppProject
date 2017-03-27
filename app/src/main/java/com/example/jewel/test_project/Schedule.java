@@ -32,7 +32,6 @@ public class Schedule {
     }
 
     public void removeEvent(ScheduleEvent event){
-        //TODO: Make sure this implementation actually works the way we need it to
         events.remove(event);
     }
 
@@ -114,5 +113,4 @@ public class Schedule {
 
         return str;
     }
-    //Add more methods...?
 }

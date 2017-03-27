@@ -24,7 +24,8 @@ public class EventAdapter extends ArrayAdapter<ScheduleEvent> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
-        TextView tv = (TextView) view.findViewById(android.R.id.text1);
+        //The following code can be used to change the text color if we want a theme in the future
+        //TextView tv = (TextView) view.findViewById(android.R.id.text1);
         //Changing the text color
         //tv.setTextColor(Color.argb(255,255, 255,255));
 

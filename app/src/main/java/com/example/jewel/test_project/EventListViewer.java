@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
@@ -40,7 +39,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     //Buttons
     Button btnManual, btnAuto;
 
-    private String scheduleType = "", scheduleKey = "";
+    private String scheduleType = "", groupKey = "";
     private Schedule s;
 
     //for the menu
@@ -60,17 +59,14 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_view);
 
-        //TODO: PUT GETTING THE RIGHT SCHEDULE HERE
-        scheduleType = getIntent().getExtras().getString("ScheduleType");
+        scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
 
         if (scheduleType.equals("User")) {
              s = DataManager.Instance().getUser().getSchedule();
             events = s.getAllEvents();
         } else if (scheduleType.equals("Group")) {
-            scheduleKey = getIntent().getExtras().getString("ScheduleKey");
-            s = DataManager.Instance().getGroups().get(scheduleKey).getGroupSchedule();
-        } else if (scheduleType.equals("Friend")) {
-            //TODO: Friend schedule
+            groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
+            s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
         fillList();
@@ -89,7 +85,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
                 //Send the eventID of the event to be viewed to the details view
                 Bundle b = new Bundle();
                 b.putString("ScheduleType", scheduleType);
-                b.putString("ScheduleKey", scheduleKey);
+                b.putString("ScheduleKey", groupKey);
                 b.putString("EventID", Integer.toString(event.getEventID()));
 
                 toEventDetails(b);
@@ -211,6 +207,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         // Shaking generates an event in the next week or so
         String eventName = "Random Event";
 
+        //Start of window: 3 days out
         Calendar now = Calendar.getInstance();
         now.add(Calendar.DAY_OF_MONTH, 3);
 
@@ -218,26 +215,29 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         int startMonth = now.get(Calendar.MONTH);
         int startDay = now.get(Calendar.DAY_OF_MONTH);
 
+        //End of window: one after start
         now.add(Calendar.DAY_OF_MONTH, 7);
 
         int endYear = now.get(Calendar.YEAR);
         int endMonth = now.get(Calendar.MONTH);
         int endDay = now.get(Calendar.DAY_OF_MONTH);
 
+        //Event duration: 1 hour
         int duration = 60;
 
-        //Generate an event this schedule
         Calendar windowStart = new GregorianCalendar(startYear, startMonth, startDay);
         Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
 
+        //Generate an event this schedule
         ScheduleEvent event = s.findTimeInSchedule(windowStart, windowEnd, duration);
-        if (event != null) {
+
+        if (event != null) { //Event Found
             event.changeName(eventName);
 
             //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
             s.addEvent(event);
             if (scheduleType.equals("Group")) {
-                DataManager.Instance().getGroups().get(scheduleKey).rebuildGroupSchedule();
+                DataManager.Instance().getGroups().get(groupKey).rebuildGroupSchedule();
                 //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
             }
         }
@@ -262,20 +262,19 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (view == btnAuto) {
-            Bundle b = new Bundle();
-            b.putString("ScheduleType", scheduleType);
-            b.putString("ScheduleKey", scheduleKey);
+        Bundle b = new Bundle();
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
 
+        if (view == btnAuto) {
             Intent intent = new Intent(this, EventAutoCreate.class);
             intent.putExtras(b);
             startActivity(intent);
 
         } else if (view == btnManual) {
-            //TODO: Go to manual-create event activity
-            //Intent intent = new Intent(this, PasswordDetails.class);
-            //intent.putExtras(b);
-            //startActivity(intent);
+            Intent intent = new Intent(this, CreateEvent.class);
+            intent.putExtras(b);
+            startActivity(intent);
         }
     }
 

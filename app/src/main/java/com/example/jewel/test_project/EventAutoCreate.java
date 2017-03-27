@@ -15,7 +15,7 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
             txtEndDay, txtEventDuration;
     Button btnGenerate;
 
-    String scheduleType, scheduleKey;
+    String scheduleType, groupKey;
     Schedule schedule;
 
     @Override
@@ -23,12 +23,12 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_auto_create);
 
-        scheduleType = getIntent().getExtras().getString("ScheduleType");
+        scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
         if (scheduleType.equals("User")) {
             schedule = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
-            scheduleKey = getIntent().getExtras().getString("ScheduleKey");
-            schedule = DataManager.Instance().getGroups().get(scheduleKey).getGroupSchedule();
+            groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
+            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
         txtEventName = (EditText) findViewById(R.id.txt_auto_event_name);
@@ -71,14 +71,14 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
         //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
         schedule.addEvent(event);
         if (scheduleType.equals("Group")) {
-            DataManager.Instance().getGroups().get(scheduleKey).rebuildGroupSchedule();
+            DataManager.Instance().getGroups().get(groupKey).rebuildGroupSchedule();
             //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
         }
 
         //Go back to ListView
         Bundle b = new Bundle();
-        b.putString("ScheduleType", scheduleType);
-        b.putString("ScheduleKey", scheduleKey);
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
 
         Intent intent = new Intent(this, EventListViewer.class);
         intent.putExtras(b);
