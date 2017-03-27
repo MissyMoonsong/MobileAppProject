@@ -26,7 +26,8 @@
         <activity android:name=".CreateGroup" />
         <activity android:name=".GroupDetails" />
         <activity android:name=".EventAutoCreate" />
-        <activity android:name=".EventDetails"></activity>
+        <activity android:name=".EventDetails"/>
+        <activity android:name=".GroupMainPageActivity"/>
     </application>
 
 </manifest>

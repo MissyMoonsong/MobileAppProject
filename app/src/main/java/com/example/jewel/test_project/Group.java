@@ -78,4 +78,9 @@ public class Group {
     public String getGroupID(){
         return groupID;
     }
+
+    @Override
+    public String toString(){
+        return getName();
+    }
 }

@@ -80,18 +80,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void addDrawerItems() {
-        String[] navArray = {"Home", "Self", "Groups", "Friends", "About us" };
-        final Class[] classArray = {Register.class, EventListViewer.class,GroupMainPageActivity.class, Register.class,Register.class};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navArray);
+        mAdapter = DrawerData.makeDrawerAdapter(this);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(Register.this, classArray[position]);
-                Bundle b = new Bundle();
-                b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
-                intent.putExtras(b);
+                Intent intent = new Intent(Register.this,  DrawerData.classArray[position]);
+                intent.putExtras(DrawerData.makeBundleForEventView());
                 startActivity(intent);
             }
         });
