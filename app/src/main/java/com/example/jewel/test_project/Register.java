@@ -30,6 +30,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonSignup;
+    private Button buttonSwitchLogin;
     private ProgressDialog progressDialog;
 
 
@@ -58,11 +59,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
+        buttonSwitchLogin = (Button) findViewById(R.id.buttonSwitchToLogin);
 
         progressDialog = new ProgressDialog(this);
 
         //attaching listener to button
         buttonSignup.setOnClickListener(this);
+        buttonSwitchLogin.setOnClickListener(this);
+
 
         //menu
 
@@ -90,7 +94,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(Register.this, classArray[position]);
                 Bundle b = new Bundle();
-                b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
+                b.putString("ScheduleType", "User");
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -163,14 +167,19 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        //calling register method on click
-        registerUser();
+        if (view == buttonSignup) {
+            //calling register method on click
+            registerUser();
 
-        Intent i = new Intent(this, EventListViewer.class);
-        Bundle b = new Bundle();
-        b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
-        i.putExtras(b);
-        startActivity(i);
+            Intent i = new Intent(this, EventListViewer.class);
+            Bundle b = new Bundle();
+            b.putString("ScheduleType", "User");
+            i.putExtras(b);
+            startActivity(i);
+        } else if (view == buttonSwitchLogin) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        }
     }
 
     @Override
