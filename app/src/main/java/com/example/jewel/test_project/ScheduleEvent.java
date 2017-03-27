@@ -166,4 +166,13 @@ public class ScheduleEvent {
     public String toString() {
         return getEventName();
     }
+
+    public static boolean anyDaySelected(boolean[] weekdays){
+        for(boolean b : weekdays){
+            if (b){
+                return true;
+            }
+        }
+        return false;
+    }
 }
