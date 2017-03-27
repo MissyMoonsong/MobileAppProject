@@ -1,5 +1,7 @@
 package com.example.jewel.test_project;
 
+import android.provider.Contacts;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +65,10 @@ public class Group {
             result += p.toString() + " ";
         }
         return result;
+    }
+
+    public List<Person> getMembers(){
+        return members;
     }
 
     public String getName(){

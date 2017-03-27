@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Calendar;
+
 /**
  * Created by allis on 3/26/2017.
  */
@@ -132,9 +134,15 @@ public class CreateEvent extends AppCompatActivity {
                 //Store values to firebase
                 ref.child("Event").setValue(event);
 
-                //TODO: add event to mutiple schedules if this a group (scheduletype)
-
-                //TODO: Add event to schedule within app
+                if(scheduleType.equals("Group")){
+                    Group g = DataManager.Instance().getGroups().get(groupKey);
+                    for(Person p : g.getMembers()){
+                        int userID = p.getUserID();
+                        //TODO: Database stuff: connect to this person's user id if not already
+                    }
+                } else {
+                    //TODO: Was a single user schedule
+                }
             }
         });
     }
