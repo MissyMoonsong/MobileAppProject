@@ -251,8 +251,14 @@ public class DataManager {
             for(DataSnapshot memberIDSnap : groupMembers.getChildren()){
                 String memberID = memberIDSnap.getValue().toString();
 
-                buildSchedule(g.getGroupSchedule(), memberID, dataSnapshot);
+                //Create a Person object
+                Person p = new Person("NAME HERE", memberID);
+                g.addMember(p);
+
+                buildSchedule(p.getSchedule(), memberID, dataSnapshot);
             }
+
+            g.rebuildGroupSchedule();
         }
     }
 
