@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -59,15 +61,19 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_view);
 
+
+        Firebase.setAndroidContext(this);
+
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
 
         if (scheduleType.equals("User")) {
              s = DataManager.Instance().getUser().getSchedule();
-            events = s.getAllEvents();
         } else if (scheduleType.equals("Group")) {
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
             s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
+
+        events = s.getAllEvents();
 
         fillList();
 
@@ -84,9 +90,9 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
                 //Send the eventID of the event to be viewed to the details view
                 Bundle b = new Bundle();
-                b.putString("ScheduleType", scheduleType);
-                b.putString("ScheduleKey", groupKey);
-                b.putString("EventID",event.getEventID());
+                b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+                b.putString(DataManager.GROUP_ID_KEY, groupKey);
+                b.putString(DataManager.EVENT_ID_KEY,event.getEventID());
 
                 toEventDetails(b);
             }
@@ -124,18 +130,14 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
 
     //for menu
     private void addDrawerItems() {
-        String[] navArray = {"Home", "Self", "Groups", "Friends", "About us"};
-        final Class[] classArray = {Register.class, EventListViewer.class, GroupMainPageActivity.class, Register.class, Register.class};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navArray);
+        mAdapter = DrawerData.makeDrawerAdapter(this);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(EventListViewer.this, classArray[position]);
-                Bundle b = new Bundle();
-                b.putString("ScheduleType", "User");
-                intent.putExtras(b);
+                Intent intent = new Intent(EventListViewer.this, DrawerData.classArray[position]);
+                intent.putExtras(DrawerData.makeBundleForEventView());
                 startActivity(intent);
             }
         });
@@ -204,45 +206,13 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     }
 
     private void shakeResponse() {
-        // Shaking generates an event in the next week or so
-        String eventName = "Random Event";
-
-        //Start of window: 3 days out
-        Calendar now = Calendar.getInstance();
-        now.add(Calendar.DAY_OF_MONTH, 3);
-
-        int startYear = now.get(Calendar.YEAR);
-        int startMonth = now.get(Calendar.MONTH);
-        int startDay = now.get(Calendar.DAY_OF_MONTH);
-
-        //End of window: one after start
-        now.add(Calendar.DAY_OF_MONTH, 7);
-
-        int endYear = now.get(Calendar.YEAR);
-        int endMonth = now.get(Calendar.MONTH);
-        int endDay = now.get(Calendar.DAY_OF_MONTH);
-
-        //Event duration: 1 hour
-        int duration = 60;
-
-        Calendar windowStart = new GregorianCalendar(startYear, startMonth, startDay);
-        Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
-
-        //Generate an event this schedule
-        ScheduleEvent event = s.findTimeInSchedule(windowStart, windowEnd, duration);
-
-        if (event != null) { //Event Found
-            event.changeName(eventName);
-
-            //TODO: Add event to database -- connect to the right users! (also get an ID for the event)
-            s.addEvent(event);
-            if (scheduleType.equals("Group")) {
-                DataManager.Instance().getGroups().get(groupKey).rebuildGroupSchedule();
-                //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
-            }
-        }
-
-        fillList();
+        //Go to Auto Generate Event page
+        Bundle b = new Bundle();
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
+        Intent intent = new Intent(this, EventAutoCreate.class);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     //Helper method to use displayed string to find the object

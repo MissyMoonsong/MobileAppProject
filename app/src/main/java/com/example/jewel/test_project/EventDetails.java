@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 public class EventDetails extends AppCompatActivity implements View.OnClickListener {
     TextView txtName, txtWindow, txtTime, txtRecurrence;
     Button btnDelete, btnBack;
@@ -17,6 +19,9 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
+
+
+        Firebase.setAndroidContext(this);
 
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
         if (scheduleType.equals("User")) {
@@ -39,6 +44,16 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         btnBack.setOnClickListener(this);
 
         fillInfo();
+        adjustButtons();
+    }
+
+    private void adjustButtons(){
+        if (scheduleType.equals("User")) {
+            btnDelete.setEnabled(true);
+        } else if (scheduleType.equals("Group")) {
+            //Delete makes no sense when a Group schedule is based on members
+            btnDelete.setEnabled(false);
+        }
     }
 
     private void fillInfo() {
@@ -65,9 +80,7 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
 
         } else if (view == btnDelete) {
-            //Delete this event
-            schedule.removeEvent(schedule.findEventByID(eventID));
-            //TODO: Delete this event - group and/or user combo from database
+            DataManager.Instance().deleteUserEvent(eventID);
 
             //Go back to list view
             startActivity(intent);

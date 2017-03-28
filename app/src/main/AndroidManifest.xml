@@ -24,10 +24,13 @@
         </activity>
         <activity android:name=".Register" />
         <activity android:name=".EventListViewer" />
+        <activity android:name=".CreateEvent" />
         <activity android:name=".CreateGroup" />
         <activity android:name=".GroupDetails" />
         <activity android:name=".EventAutoCreate" />
-        <activity android:name=".EventDetails"></activity>
+        <activity android:name=".EventDetails" />
+        <activity android:name=".GroupMainPageActivity" />
+        <activity android:name=".AboutUs"></activity>
     </application>
 
 </manifest>

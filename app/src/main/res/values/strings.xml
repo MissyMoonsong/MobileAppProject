@@ -42,6 +42,9 @@
         <item>Settings</item>
     </string-array>
 
+    <!-- Strings related to About page -->
+    <string name="about_us_text">Welcome to the Group Scheduling App!\nMade by Jamie, Allison, and Gwen</string>
+
     <!-- Strings related to Event Viewing -->
     <string name="event_creation_manual">Manual Event</string>
     <string name="event_creation_auto">Auto Event</string>

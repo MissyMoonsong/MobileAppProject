@@ -13,18 +13,18 @@
         android:orientation="vertical"
         android:padding="@dimen/activity_horizontal_margin">
 
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
+
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="Enter Email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -49,7 +49,6 @@
             android:layout_marginTop="20dip"
             android:text="LOG IN" />
 
-
         <!-- Link to Login Screen -->
 
         <Button
@@ -58,7 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="@null"
-            android:text="Need to Register?"
+            android:text="Need To Register?"
+            android:textAllCaps="false"
             android:textSize="15dp" />
     </LinearLayout>
 
