@@ -191,7 +191,7 @@ public class DataManager {
 
     private void removeUserToGroupMembership(String userID, String groupID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        Query applesQuery = db.child("MembershipUserToGroup").child(userID).orderByChild("userID").equalTo(groupID);
+        Query applesQuery = db.child("MembershipUserToGroup").child(userID).orderByChild("groupID").equalTo(groupID);
 
         applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -210,7 +210,7 @@ public class DataManager {
 
     private void removeGroupToUserMembership(String userID, String groupID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        Query applesQuery = db.child("MembershipUserToGroup").child(groupID).orderByChild("userID").equalTo(userID);
+        Query applesQuery = db.child("MembershipGroupToUser").child(groupID).orderByChild("userID").equalTo(userID);
 
         applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -250,7 +250,7 @@ public class DataManager {
         user.getSchedule().removeEvent(user.getSchedule().findEventByID(eventID));
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        Query eventQuery = db.child("Schedules").child(user.getUserID()).orderByChild("EventID").equalTo(eventID);
+        Query eventQuery = db.child("Schedules").child(user.getUserID()).orderByChild("eventID").equalTo(eventID);
 
         eventQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
