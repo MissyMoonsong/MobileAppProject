@@ -50,12 +50,7 @@ public class DataManager {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
         createDummySchedule(); //TODO: Remove this when database works
 
-        DatabaseReference users = ref.child("users");
-
-
-
-
-        ref.addListenerForSingleValueEvent(
+        ref.addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -168,8 +163,6 @@ public class DataManager {
             DatabaseScheduleEvent temp = new DatabaseScheduleEvent();
             temp.setEventID(eventId);
             ref.child("Schedules").child(user.getUserID()).push().setValue(temp);
-
-
         }
     }
 
@@ -211,9 +204,10 @@ public class DataManager {
     public void addOtherUserToGroup(String groupID, String userLookup, Firebase ref){
         Person p = DataManager.Instance().lookUpUser(userLookup, ref);
         if(p != null) {
-            groups.get(groupID).addMember(p);
-            //TODO: Add person to group in database
+            String userID = p.getUserID();
 
+            addUserToGroupMembership(userID, groupID, ref);
+            addGroupToUserMembership(userID, groupID, ref);
         }
     }
 
@@ -231,6 +225,36 @@ public class DataManager {
 
         ref.child("users");
         return new Person(nameEmail, getNextUserID());
+    }
+
+    public void fillPersonObjectWithEvents(Person p, DataSnapshot snap){
+        String userID = p.getUserID();
+
+        DataSnapshot userEventList = snap.child("Schedules").child(userID);
+        for(DataSnapshot e : userEventList.getChildren()){
+            DatabaseScheduleEvent ev = e.getValue(DatabaseScheduleEvent.class);
+            String eventID = ev.getEventID();
+
+            //Lookup the event
+            DatabaseEvent event = snap.child("Event").child(eventID).getValue(DatabaseEvent.class);
+
+            p.getSchedule().addEvent(buildScheduleEventFromEvent(event));
+        }
+    }
+
+    public void fillGroupWithMembers(Group g, DataSnapshot snap){
+        String groupID = g.getGroupID();
+
+        DataSnapshot groupMembership = snap.child("MembershipGroupToUser").child(groupID);
+        for(DataSnapshot m : groupMembership.getChildren()){
+            String memberID = m.getValue().toString();
+
+            //Create a Person object
+            Person p = lookUpUser(memberID, new Firebase(Config.FIREBASE_URL));
+            fillPersonObjectWithEvents(p, snap);
+
+            g.addMember(p);
+        }
     }
 
 
@@ -263,87 +287,49 @@ public class DataManager {
         String name =  user.getEmail();
         //Set up user object
         this.user = new Person(name, userID);
-
-        Schedule userSchedule = this.user.getSchedule();
-        buildSchedule(userSchedule, userID, dataSnapshot);
+        fillPersonObjectWithEvents(this.user, dataSnapshot);
 
         //get all groups user is in
         DataSnapshot userGroups = dataSnapshot.child("MembershipUserToGroup").child(userID);
         //For reach group
-        for(DataSnapshot groupIDSnap : userGroups.getChildren()){
-            String groupID = groupIDSnap.getValue().toString();
+        for(DataSnapshot userGroup : userGroups.getChildren()){
+            String groupID = userGroup.getValue().toString();
 
             //Get group name
-            DataSnapshot groupSnap = dataSnapshot.child("Group").child(groupID);
-            String groupName = groupSnap.getValue().toString();
+            DatabaseGroup dbGroup = dataSnapshot.child("Group").child(groupID).getValue(DatabaseGroup.class);
+            String groupName = dbGroup.getGroupName();
 
             Group g = new Group(groupName, groupID);
             groups.put(groupID, g);
 
-            //for each member
-            DataSnapshot groupMembers = dataSnapshot.child("MembershipGroupToUser").child(groupID);
-
-            for(DataSnapshot memberIDSnap : groupMembers.getChildren()){
-                String memberID = memberIDSnap.getValue().toString();
-
-                //Create a Person object
-                Person p = new Person("NAME HERE", memberID);
-                g.addMember(p);
-
-                buildSchedule(p.getSchedule(), memberID, dataSnapshot);
-            }
+            fillGroupWithMembers(g, dataSnapshot);
 
             g.rebuildGroupSchedule();
         }
     }
 
-    public void buildSchedule(Schedule s, String userID, DataSnapshot dataSnapshot){
-        //get all events user connects to -- build schedule
-        DataSnapshot schedules = dataSnapshot.child("Schedule");
-        DataSnapshot userSchedule = schedules.child(userID);
+    public static ScheduleEvent buildScheduleEventFromEvent(DatabaseEvent ev) {
+        String eName = ev.getEventName();
 
-        for(DataSnapshot eventIDChild : userSchedule.getChildren()){
-            String eventID = eventIDChild.getValue().toString();
+        int sYear = ev.getStartYear();
+        int sMonth = ev.getStartMonth();
+        int sDay = ev.getStartDay();
+        int sHour = ev.getStartHour();
+        int sMin = ev.getStartMin();
 
-            DataSnapshot eventSnapshot = dataSnapshot.child("Event");
-            DataSnapshot event_id_snap = eventSnapshot.child(eventID);
+        int eYear = ev.getEndYear();
+        int eMonth = ev.getEndMonth();
+        int eDay = ev.getEndDay();
+        int eHour = ev.getEndHour();
+        int eMin = ev.getEndMin();
 
-            Map<String, Object> attributes = new HashMap<>();
-
-            //Make a map of this event's attributes
-            for(DataSnapshot eventAttribute : event_id_snap.getChildren()) {
-                attributes.put(eventAttribute.getKey(), eventAttribute.getValue());
-            }
-
-            ScheduleEvent e = buildEventFromMap(attributes);
-            e.setEventID(eventID);
-
-            s.addEvent(e);
-        }
-    }
-
-    public ScheduleEvent buildEventFromMap(Map<String, Object> attributes){
-        String eName = attributes.get("eventName").toString();
-
-        int sYear = Integer.parseInt(attributes.get("startYear").toString());
-        int sMonth = Integer.parseInt(attributes.get("startMonth").toString());
-        int sDay = Integer.parseInt(attributes.get("startDay").toString());
-        int sHour = Integer.parseInt(attributes.get("startHour").toString());
-        int sMin = Integer.parseInt(attributes.get("startMin").toString());
-
-        int eYear  = Integer.parseInt(attributes.get("endYear").toString());
-        int eMonth  = Integer.parseInt(attributes.get("endMonth").toString());
-        int eDay  = Integer.parseInt(attributes.get("endDay").toString());
-        int eHour  = Integer.parseInt(attributes.get("endHour").toString());
-        int eMin  = Integer.parseInt(attributes.get("endMin").toString());
-
-        boolean sun = (boolean)attributes.get("rsunday");
-        boolean mon= (boolean)attributes.get("rmonday");
-        boolean tue= (boolean)attributes.get("rtuesday");
-        boolean wed= (boolean)attributes.get("rwednesday");
-        boolean thu= (boolean)attributes.get("rthursday");
-        boolean fri= (boolean)attributes.get("rfriday");
-        boolean sat= (boolean)attributes.get("rsaturday");
+        boolean sun = ev.getRSunday();
+        boolean mon = ev.getRMonday();
+        boolean tue = ev.getRTuesday();
+        boolean wed = ev.getRWednesday();
+        boolean thu = ev.getRThursday();
+        boolean fri = ev.getRFriday();
+        boolean sat = ev.getRSaturday();
 
         //Adding to the schedule within the app
         Calendar start = Calendar.getInstance();
@@ -373,10 +359,10 @@ public class DataManager {
 
         ScheduleEvent e;
 
-        if(ScheduleEvent.anyDaySelected(weekdays)){ //Recurring
+        if (ScheduleEvent.anyDaySelected(weekdays)) { //Recurring
             e = new ScheduleEvent(eName, start, end, weekdays);
 
-        } else{
+        } else {
             e = new ScheduleEvent(eName, start, end);
         }
 

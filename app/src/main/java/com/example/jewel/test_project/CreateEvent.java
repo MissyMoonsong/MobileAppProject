@@ -58,7 +58,7 @@ public class CreateEvent extends AppCompatActivity {
                 DatabaseEvent event = fillEvent();
 
                 //Add event to app -- no DB variant
-                ScheduleEvent se = buildScheduleEventFromEvent(event);
+                ScheduleEvent se = DataManager.buildScheduleEventFromEvent(event);
 
                 DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey, ref);
 
@@ -150,64 +150,5 @@ public class CreateEvent extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public ScheduleEvent buildScheduleEventFromEvent(DatabaseEvent ev) {
-        String eName = ev.getEventName();
 
-        int sYear = ev.getStartYear();
-        int sMonth = ev.getStartMonth();
-        int sDay = ev.getStartDay();
-        int sHour = ev.getStartHour();
-        int sMin = ev.getStartMin();
-
-        int eYear = ev.getEndYear();
-        int eMonth = ev.getEndMonth();
-        int eDay = ev.getEndDay();
-        int eHour = ev.getEndHour();
-        int eMin = ev.getEndMin();
-
-        boolean sun = ev.getRSunday();
-        boolean mon = ev.getRMonday();
-        boolean tue = ev.getRTuesday();
-        boolean wed = ev.getRWednesday();
-        boolean thu = ev.getRThursday();
-        boolean fri = ev.getRFriday();
-        boolean sat = ev.getRSaturday();
-
-        //Adding to the schedule within the app
-        Calendar start = Calendar.getInstance();
-
-        start.set(Calendar.YEAR, sYear);
-        start.set(Calendar.MONTH, sMonth);
-        start.set(Calendar.DAY_OF_MONTH, sDay);
-        start.set(Calendar.HOUR_OF_DAY, sHour);
-        start.set(Calendar.MINUTE, sMin);
-
-        Calendar end = Calendar.getInstance();
-        end.set(Calendar.YEAR, eYear);
-        end.set(Calendar.MONTH, eMonth);
-        end.set(Calendar.DAY_OF_MONTH, eDay);
-        end.set(Calendar.HOUR_OF_DAY, eHour);
-        end.set(Calendar.MINUTE, eMin);
-
-        boolean[] weekdays = new boolean[7];
-        weekdays[0] = sun;
-        weekdays[1] = mon;
-        weekdays[2] = tue;
-        weekdays[3] = wed;
-        weekdays[4] = thu;
-        weekdays[5] = fri;
-        weekdays[6] = sat;
-
-
-        ScheduleEvent e;
-
-        if (ScheduleEvent.anyDaySelected(weekdays)) { //Recurring
-            e = new ScheduleEvent(eName, start, end, weekdays);
-
-        } else {
-            e = new ScheduleEvent(eName, start, end);
-        }
-
-        return e;
-    }
 }

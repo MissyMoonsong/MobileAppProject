@@ -30,7 +30,9 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view){
         String name = nameText.getText().toString();
         if(name.length() > 0){
-            DataManager.Instance().createGroupAndAddUser(name);
+            //Creating firebase object
+            Firebase ref = new Firebase(Config.FIREBASE_URL);
+            DataManager.Instance().createGroupAndAddUser(name, ref);
         }
 
         Intent intent = new Intent(this, GroupMainPageActivity.class);
