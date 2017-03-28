@@ -285,7 +285,10 @@ public class DataManager {
             //Lookup the event
             DatabaseEvent event = snap.child("Event").child(eventID).getValue(DatabaseEvent.class);
 
-            p.getSchedule().addEvent(buildScheduleEventFromEvent(event));
+            ScheduleEvent se = buildScheduleEventFromEvent(event);
+            se.setEventID(eventID);
+
+            p.getSchedule().addEvent(se);
         }
     }
 
