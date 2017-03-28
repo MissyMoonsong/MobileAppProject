@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,7 +183,7 @@ public class DataManager {
     }
 
     private void addGroupToUserMembership(String userID, String groupID, Firebase ref){
-        Firebase pushedMembershipRef = ref.child("MembershipGroupToUSer").child(groupID).push();
+        Firebase pushedMembershipRef = ref.child("MembershipGroupToUser").child(groupID).push();
         DatabaseGroupToUser temp = new DatabaseGroupToUser();
         temp.setUserID(userID);
         pushedMembershipRef.setValue(temp);
@@ -296,14 +297,19 @@ public class DataManager {
         String groupID = g.getGroupID();
 
         DataSnapshot groupMembership = snap.child("MembershipGroupToUser").child(groupID);
+
         for(DataSnapshot m : groupMembership.getChildren()){
-            String memberID = m.getValue().toString();
+            DatabaseGroupToUser gu = m.getValue(DatabaseGroupToUser.class);
+            String memberID = gu.getUserID();
 
-            //Create a Person object
-            Person p = lookUpUser(memberID, new Firebase(Config.FIREBASE_URL));
-            fillPersonObjectWithEvents(p, snap);
-
-            g.addMember(p);
+            if(memberID.equals(user.getUserID())) {
+                g.addMember(user);
+            } else{
+                //Create a Person object
+                Person p = lookUpUser(memberID, new Firebase(Config.FIREBASE_URL));
+                fillPersonObjectWithEvents(p, snap);
+                g.addMember(p);
+            }
         }
     }
 
@@ -340,7 +346,8 @@ public class DataManager {
         DataSnapshot userGroups = dataSnapshot.child("MembershipUserToGroup").child(userID);
         //For reach group
         for(DataSnapshot userGroup : userGroups.getChildren()){
-            String groupID = userGroup.getValue().toString();
+            DatabaseUserToGroup ug = userGroup.getValue(DatabaseUserToGroup.class);
+            String groupID = ug.getGroupID();
 
             //Get group name
             DatabaseGroup dbGroup = dataSnapshot.child("Group").child(groupID).getValue(DatabaseGroup.class);
