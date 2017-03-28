@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 public class GroupDetails extends AppCompatActivity implements View.OnClickListener{
     Button btnAddMember, btnGoSchedule, btnLeave;
     TextView userList;
@@ -19,6 +21,10 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
+
+
+
+        Firebase.setAndroidContext(this);
 
         btnAddMember = (Button)findViewById(R.id.btn_group_add_member);
         btnAddMember.setOnClickListener(this);
@@ -31,9 +37,14 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
 
         String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
         myGroup = DataManager.Instance().getGroups().get(groupKey);
+        myGroup.rebuildGroupSchedule(); //Refresh the group
 
+        fillNames();
+    }
+
+    private void fillNames(){
         userList = (TextView)findViewById(R.id.txt_user_list);
-        String text = myGroup.getName() + "\n" + myGroup.getMemberList();
+        String text = "Group: " + myGroup.getName() + "\n" + myGroup.getMemberList();
         userList.setText(text);
     }
 
@@ -42,14 +53,13 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         if(view == btnAddMember){
             String name = txtMemberName.getText().toString();
             if(name.length() > 0){
-                //TODO: Lookup person through DB instead
-                Person p = new Person(name, "2");
-                if(p != null) {
-                    myGroup.addMember(p);
-                } else{
-                    //TODO: Something about user not found
-                }
+
+                Firebase ref = new Firebase(Config.FIREBASE_URL);
+                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref);
             }
+
+            //Refresh member names
+            fillNames();
 
         } else if (view == btnGoSchedule){
             Bundle b = new Bundle();
@@ -60,14 +70,9 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             intent.putExtras(b);
             startActivity(intent);
         } else if (view == btnLeave){
-            //TODO: Remove user-group membership in database
-            DataManager.Instance().getGroups().remove(myGroup);
-
-            Bundle b = new Bundle();
-            b.putString(DataManager.SCHEDULE_TYPE_KEY, "User");
-
-            Intent intent = new Intent(this, EventListViewer.class);
-            intent.putExtras(b);
+            DataManager.Instance().removeUserFromGroup(myGroup.getGroupID());
+            //Go Back
+            Intent intent = new Intent(this, GroupMainPageActivity.class);
             startActivity(intent);
         }
     }

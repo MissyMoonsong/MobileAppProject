@@ -2,28 +2,13 @@ package com.example.jewel.test_project;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 
@@ -57,6 +42,34 @@ public class CreateEvent extends AppCompatActivity {
             schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
+        //Setting all the view variables
+        setViews();
+
+        Firebase.setAndroidContext(this);
+
+        create_event.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                //Creating firebase object
+                Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                DatabaseEvent event = fillEvent();
+
+                //Add event to app -- no DB variant
+                ScheduleEvent se = DataManager.buildScheduleEventFromEvent(event);
+
+                DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey, ref);
+
+                //Go to list again
+                returnToList();
+            }
+        });
+    }
+
+
+    private void setViews() {
         //Initialize Views
         event_name = (EditText) findViewById(R.id.event_name);
         start_hour = (EditText) findViewById(R.id.start_hour);
@@ -77,73 +90,65 @@ public class CreateEvent extends AppCompatActivity {
         r_friday = (ToggleButton) findViewById(R.id.r_friday);
         r_saturday = (ToggleButton) findViewById(R.id.r_saturday);
         create_event = (Button) findViewById(R.id.button_create_event);
-
-        Firebase.setAndroidContext(this);
-
-        create_event.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                //Creating firebase object
-                Firebase ref = new Firebase(Config.FIREBASE_URL);
-
-                //Getting values to store
-                String evname = event_name.getText().toString().trim();
-                Integer shour = Integer.parseInt(start_hour.getText().toString().trim());
-                Integer smin = Integer.parseInt(start_min.getText().toString().trim());
-                Integer ehour = Integer.parseInt(end_hour.getText().toString().trim());
-                Integer emin = Integer.parseInt(end_min.getText().toString().trim());
-                Integer smonth = Integer.parseInt(start_month.getText().toString().trim());
-                Integer sday = Integer.parseInt(start_day.getText().toString().trim());
-                Integer syear = Integer.parseInt(start_year.getText().toString().trim());
-                Integer emonth = Integer.parseInt(end_month.getText().toString().trim());
-                Integer eday = Integer.parseInt(end_day.getText().toString().trim());
-                Integer eyear = Integer.parseInt(end_year.getText().toString().trim());
-                Boolean iSun = r_sunday.isChecked();
-                Boolean iMon = r_monday.isChecked();
-                Boolean iTue = r_tuesday.isChecked();
-                Boolean iWed = r_wednesday.isChecked();
-                Boolean iThur = r_thursday.isChecked();
-                Boolean iFri = r_friday.isChecked();
-                Boolean iSat = r_saturday.isChecked();
-
-                //Create Event Object
-                Event event = new Event();
-
-                //Add Values
-                event.setEventName(evname);
-                event.setStartHour(shour);
-                event.setStartMin(smin);
-                event.setEndHour(ehour);
-                event.setEndMin(emin);
-                event.setStartMonth(smonth);
-                event.setStartDay(sday);
-                event.setStartYear(syear);
-                event.setEndMonth(emonth);
-                event.setEndDay(eday);
-                event.setEndYear(eyear);
-                event.setRSunday(iSun);
-                event.setRMonday(iMon);
-                event.setRTuesday(iTue);
-                event.setRWednesday(iWed);
-                event.setRThursday(iThur);
-                event.setRFriday(iFri);
-                event.setRSaturday(iSat);
-
-                //Store values to firebase
-                ref.child("Event").setValue(event);
-
-                if(scheduleType.equals("Group")){
-                    Group g = DataManager.Instance().getGroups().get(groupKey);
-                    for(Person p : g.getMembers()){
-                        String userID = p.getUserID();
-                        //TODO: Database stuff: connect to this person's user id if not already
-                    }
-                } else {
-                    //TODO: Was a single user schedule
-                }
-            }
-        });
     }
+
+    private DatabaseEvent fillEvent() {
+        //Getting values to store
+        String evname = event_name.getText().toString().trim();
+        Integer shour = Integer.parseInt(start_hour.getText().toString().trim());
+        Integer smin = Integer.parseInt(start_min.getText().toString().trim());
+        Integer ehour = Integer.parseInt(end_hour.getText().toString().trim());
+        Integer emin = Integer.parseInt(end_min.getText().toString().trim());
+        Integer smonth = Integer.parseInt(start_month.getText().toString().trim());
+        Integer sday = Integer.parseInt(start_day.getText().toString().trim());
+        Integer syear = Integer.parseInt(start_year.getText().toString().trim());
+        Integer emonth = Integer.parseInt(end_month.getText().toString().trim());
+        Integer eday = Integer.parseInt(end_day.getText().toString().trim());
+        Integer eyear = Integer.parseInt(end_year.getText().toString().trim());
+        Boolean iSun = r_sunday.isChecked();
+        Boolean iMon = r_monday.isChecked();
+        Boolean iTue = r_tuesday.isChecked();
+        Boolean iWed = r_wednesday.isChecked();
+        Boolean iThur = r_thursday.isChecked();
+        Boolean iFri = r_friday.isChecked();
+        Boolean iSat = r_saturday.isChecked();
+
+        //Create Event Object
+        DatabaseEvent event = new DatabaseEvent();
+
+        //Add Values
+        event.setEventName(evname);
+        event.setStartHour(shour);
+        event.setStartMin(smin);
+        event.setEndHour(ehour);
+        event.setEndMin(emin);
+        event.setStartMonth(smonth);
+        event.setStartDay(sday);
+        event.setStartYear(syear);
+        event.setEndMonth(emonth);
+        event.setEndDay(eday);
+        event.setEndYear(eyear);
+        event.setRSunday(iSun);
+        event.setRMonday(iMon);
+        event.setRTuesday(iTue);
+        event.setRWednesday(iWed);
+        event.setRThursday(iThur);
+        event.setRFriday(iFri);
+        event.setRSaturday(iSat);
+
+        return event;
+    }
+
+    private void returnToList() {
+        //Go back to ListView
+        Bundle b = new Bundle();
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
+
+        Intent intent = new Intent(this, EventListViewer.class);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+
 }

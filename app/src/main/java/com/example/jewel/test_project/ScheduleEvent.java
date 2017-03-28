@@ -56,16 +56,10 @@ public class ScheduleEvent {
         //Appears outside the window
         if (!(dayBeforeStart || dayAfterEnd)) {
             //Check for same-day as one of the windows (edge case)
-            return isSameDay(start, date) || isSameDay(end, date);
+            return DataManager.isSameDay(start, date) || DataManager.isSameDay(end, date);
         } else {
             return true;
         }
-    }
-
-    private boolean isSameDay(Calendar c1, Calendar c2) {
-        return c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
-                && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
-                && c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH);
     }
 
     /***
@@ -174,5 +168,32 @@ public class ScheduleEvent {
             }
         }
         return false;
+    }
+
+    public DatabaseEvent toDatabaseEvent(){
+        //Create Event Object
+        DatabaseEvent event = new DatabaseEvent();
+
+        //Add Values
+        event.setEventName(eventName);
+        event.setStartHour(start.get(Calendar.HOUR_OF_DAY));
+        event.setStartMin(start.get(Calendar.MINUTE));
+        event.setEndHour(end.get(Calendar.HOUR_OF_DAY));
+        event.setEndMin(end.get(Calendar.MINUTE));
+        event.setStartMonth(start.get(Calendar.MONTH));
+        event.setStartDay(start.get(Calendar.DAY_OF_MONTH));
+        event.setStartYear(start.get(Calendar.YEAR));
+        event.setEndMonth(end.get(Calendar.MONTH));
+        event.setEndDay(end.get(Calendar.DAY_OF_MONTH));
+        event.setEndYear(end.get(Calendar.YEAR));
+        event.setRSunday(activeWeekdays[0]);
+        event.setRMonday(activeWeekdays[1]);
+        event.setRTuesday(activeWeekdays[2]);
+        event.setRWednesday(activeWeekdays[3]);
+        event.setRThursday(activeWeekdays[4]);
+        event.setRFriday(activeWeekdays[5]);
+        event.setRSaturday(activeWeekdays[6]);
+
+        return event;
     }
 }

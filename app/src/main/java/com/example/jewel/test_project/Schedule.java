@@ -45,10 +45,9 @@ public class Schedule {
     private List<CalendarDay> fillDaysInWindow(Calendar windowStart, Calendar windowEnd){
         //Create a collection of calendar days, from the start to end, INCLUSIVE
         List<CalendarDay> daysInWindow = new ArrayList<>();
-
         Calendar temp = (Calendar)windowStart.clone();
 
-        while (temp.before(windowEnd)){
+        if(DataManager.isSameDay(windowStart, windowEnd)){
             CalendarDay day = new CalendarDay(temp);
             //Fill the day with event blocks
             for(ScheduleEvent e : events){
@@ -56,10 +55,20 @@ public class Schedule {
             }
             //Add day to the collection
             daysInWindow.add(day);
-            //Make another Calendar to represent the next day
-            temp = (Calendar)temp.clone();
-            //Increment day
-            temp.add(Calendar.DAY_OF_MONTH, 1);
+        } else{
+            while (temp.before(windowEnd)){
+                CalendarDay day = new CalendarDay(temp);
+                //Fill the day with event blocks
+                for(ScheduleEvent e : events){
+                    e.generateBlockOnDay(day);
+                }
+                //Add day to the collection
+                daysInWindow.add(day);
+                //Make another Calendar to represent the next day
+                temp = (Calendar)temp.clone();
+                //Increment day
+                temp.add(Calendar.DAY_OF_MONTH, 1);
+            }
         }
 
         return daysInWindow;
