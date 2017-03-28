@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -46,24 +47,13 @@ public class DataManager {
     private Map<String, Group> groups;
 
     private DataManager() {
+        user = new Person("Phone Owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        groups = new HashMap<>();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
-        createDummySchedule(); //TODO: Remove this when database works
+        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
+        //createDummySchedule(); //TODO: Remove this when database works
 
-        ref.addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //refreshFromDatabase(dataSnapshot);]
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                }
-        );
-
+        refreshFromDatabase();
     }
 
     public static DataManager Instance() {
@@ -151,15 +141,18 @@ public class DataManager {
             for (Person p : groups.get(groupKey).getMembers()) {
                 //Add event for each person
                 p.getSchedule().addEvent(event);
-                //TODO: add event to EACH MEMBER OF GROUP IN DATABASE
                 String userID = p.getUserID();
+
+                DatabaseScheduleEvent temp = new DatabaseScheduleEvent();
+                temp.setEventID(eventId);
+                ref.child("Schedules").child(userID).push().setValue(temp);
             }
 
             //Update to new group view
             groups.get(groupKey).rebuildGroupSchedule();
         } else { //Single user schedule -- THIS user
             user.getSchedule().addEvent(event);
-            //TODO: add event to EACH INDIVIDUAL
+
             DatabaseScheduleEvent temp = new DatabaseScheduleEvent();
             temp.setEventID(eventId);
             ref.child("Schedules").child(user.getUserID()).push().setValue(temp);
@@ -195,9 +188,49 @@ public class DataManager {
         pushedMembershipRef.setValue(temp);
     }
 
+    private void removeUserToGroupMembership(String userID, String groupID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        Query applesQuery = db.child("MembershipUserToGroup").child(userID).orderByChild("userID").equalTo(groupID);
+
+        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot membership: dataSnapshot.getChildren()) {
+                    membership.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DB", "onCancelled", databaseError.toException());
+            }
+        });
+    }
+
+    private void removeGroupToUserMembership(String userID, String groupID) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        Query applesQuery = db.child("MembershipUserToGroup").child(groupID).orderByChild("userID").equalTo(userID);
+
+        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot membership: dataSnapshot.getChildren()) {
+                    membership.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DB", "onCancelled", databaseError.toException());
+            }
+        });
+    }
+
 
     public void removeUserFromGroup(String groupID){
-        //TODO: Remove user-group membership in database
+        removeUserToGroupMembership(user.getUserID(), groupID);
+        removeGroupToUserMembership(user.getUserID(), groupID);
+
         groups.remove(groupID);
     }
 
@@ -214,17 +247,31 @@ public class DataManager {
     public void deleteUserEvent(String eventID){
         //Deletes the event from THIS USER'S schedule
         user.getSchedule().removeEvent(user.getSchedule().findEventByID(eventID));
-        //TODO: Remove the connection between this event and user in the database
+
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        Query eventQuery = db.child("Schedules").child(user.getUserID()).orderByChild("EventID").equalTo(eventID);
+
+        eventQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot membership: dataSnapshot.getChildren()) {
+                    membership.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("DB", "onCancelled", databaseError.toException());
+            }
+        });
     }
 
     public Person lookUpUser(String nameEmail, Firebase ref) {
         //Users stored in Firebase by Email
-
         //TODO: Replace this with actually getting info from DB
         //Return NULL if no such user exists
 
-        ref.child("users");
-        return new Person(nameEmail, getNextUserID());
+        return new Person(nameEmail, nameEmail);
     }
 
     public void fillPersonObjectWithEvents(Person p, DataSnapshot snap){
@@ -257,7 +304,6 @@ public class DataManager {
         }
     }
 
-
     public String getNextEventID() {
         String val = Integer.toString(nextEventID);
         nextEventID++;
@@ -276,10 +322,8 @@ public class DataManager {
         return val;
     }
 
-    public void refreshFromDatabase(DataSnapshot dataSnapshot){
-        groups = new HashMap<>();
-
-        //Creating firebase object
+    public void refreshWithSnap(DataSnapshot dataSnapshot) {
+        //Get current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         //Get user id
@@ -306,6 +350,26 @@ public class DataManager {
 
             g.rebuildGroupSchedule();
         }
+    }
+
+    public void refreshFromDatabase(){
+        groups = new HashMap<>();
+
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+
+        db.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        refreshWithSnap(dataSnapshot);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     public static ScheduleEvent buildScheduleEventFromEvent(DatabaseEvent ev) {
