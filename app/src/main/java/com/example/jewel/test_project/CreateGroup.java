@@ -18,6 +18,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
+
         Firebase.setAndroidContext(this);
 
         createButton = (Button)findViewById(R.id.btn_create_group);

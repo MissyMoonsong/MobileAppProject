@@ -61,6 +61,7 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_view);
 
+
         Firebase.setAndroidContext(this);
 
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);

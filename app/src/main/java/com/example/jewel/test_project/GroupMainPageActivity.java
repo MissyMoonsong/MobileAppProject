@@ -53,6 +53,8 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
 
+
+
         Firebase.setAndroidContext(this);
 
         groups = new ArrayList<>(DataManager.Instance().getGroups().values());

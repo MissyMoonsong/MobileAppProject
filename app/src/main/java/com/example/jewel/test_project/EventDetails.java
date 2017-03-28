@@ -20,6 +20,7 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
+
         Firebase.setAndroidContext(this);
 
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);

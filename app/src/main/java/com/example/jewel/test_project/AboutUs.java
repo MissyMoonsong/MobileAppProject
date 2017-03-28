@@ -26,6 +26,8 @@ public class AboutUs extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
 
+        DataManager.Instance().refreshFromDatabase();
+
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);

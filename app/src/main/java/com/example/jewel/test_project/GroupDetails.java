@@ -22,6 +22,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
 
+
+
         Firebase.setAndroidContext(this);
 
         btnAddMember = (Button)findViewById(R.id.btn_group_add_member);
