@@ -30,7 +30,7 @@
         <activity android:name=".EventAutoCreate" />
         <activity android:name=".EventDetails" />
         <activity android:name=".GroupMainPageActivity" />
-        <activity android:name=".AboutUs"></activity>
+        <activity android:name=".AboutUs"/>
     </application>
 
 </manifest>

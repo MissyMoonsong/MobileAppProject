@@ -173,7 +173,6 @@ public class CreateEvent extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker arg0,
                               int arg1, int arg2, int arg3) {
-            // TODO Auto-generated method stub
             // arg1 = year
             b_year = arg1;
             // arg2 = month
@@ -187,7 +186,6 @@ public class CreateEvent extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker arg0,
                               int arg1, int arg2, int arg3) {
-            // TODO Auto-generated method stub
             // arg1 = year
             e_year = arg1;
             // arg2 = month
@@ -203,7 +201,6 @@ public class CreateEvent extends AppCompatActivity {
         @Override
         public void onTimeSet(TimePicker arg0,
                               int arg1, int arg2) {
-            // TODO Auto-generated method stub
             // arg1 = hour
             b_hour = arg1;
             // arg2 = min
@@ -215,7 +212,6 @@ public class CreateEvent extends AppCompatActivity {
         @Override
         public void onTimeSet(TimePicker arg0,
                               int arg1, int arg2) {
-            // TODO Auto-generated method stub
             // arg1 = hour
             e_hour = arg1;
             // arg2 = min
