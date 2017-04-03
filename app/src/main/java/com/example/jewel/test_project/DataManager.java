@@ -54,6 +54,7 @@ public class DataManager {
         //DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
         //createDummySchedule(); //TODO: Remove this when database works
 
+
         refreshFromDatabase();
     }
 

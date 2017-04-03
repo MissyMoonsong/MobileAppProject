@@ -149,6 +149,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         //checking if success
                         if(task.isSuccessful()){
                             //display some message here
+
                             Toast.makeText(Register.this,"Successfully registered",Toast.LENGTH_LONG).show();
                         }else{
                             //display some message here

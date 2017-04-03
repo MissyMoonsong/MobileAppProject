@@ -1,124 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    tools:context=".CreateEvent">
 
     <EditText
         android:id="@+id/event_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Event Name"
         android:inputType="textPersonName" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/start_hour"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Start Hour(0-23)"
-            android:inputType="number" />
+            android:layout_weight="0"
+            android:text="Set Start Date:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/start_minute"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/button_beginDate"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Start Minute(0-59)"
-            android:inputType="number" />
+            android:layout_weight="1"
+            android:onClick="setBeginDate"
+            android:text="" />
+
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_marginTop="125dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/end_hour"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="End Hour(0-23)"
-            android:inputType="number" />
+            android:layout_weight="0"
+            android:text="Set End Date:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/end_minute"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/button_endDate"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="End Minute(0-59)"
-            android:inputType="number" />
+            android:layout_weight="1"
+            android:onClick="setEndDate"
+            android:text="" />
+
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/start_month"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Start Month(1-12)"
-        android:inputType="number" />
+        android:layout_marginTop="190dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/start_day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Start Day(1-31)"
-        android:inputType="number" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Set Start Time:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/start_year"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Start Year(XXXX)"
-        android:inputType="number" />
+        <Button
+            android:id="@+id/button_beginTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setBeginTime"
+            android:text="" />
 
-
-    <EditText
-        android:id="@+id/end_month"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="End Month(1-12)"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/end_day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="End Day(1-31)"
-        android:inputType="number" />
-
-    <EditText
-        android:id="@+id/end_year"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="End Year(XXXX)"
-        android:inputType="number" />
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Set End Time:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/button_endTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="setEndTime"
+            android:text="" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="305dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
 
         <ToggleButton
             android:id="@+id/r_sunday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textOff="Sun"
-            android:textOn="Yes" />
+            android:textOn="Sun" />
 
         <ToggleButton
             android:id="@+id/r_monday"
@@ -126,7 +131,7 @@
             android:layout_height="wrap_content"
             android:text="2"
             android:textOff="Mon"
-            android:textOn="Yes" />
+            android:textOn="Mon" />
 
         <ToggleButton
             android:id="@+id/r_tuesday"
@@ -134,7 +139,7 @@
             android:layout_height="wrap_content"
             android:text="3"
             android:textOff="Tue"
-            android:textOn="Yes" />
+            android:textOn="Tue" />
 
         <ToggleButton
             android:id="@+id/r_wednesday"
@@ -142,15 +147,16 @@
             android:layout_height="wrap_content"
             android:text="4"
             android:textOff="Wed"
-            android:textOn="Yes" />
+            android:textOn="Wed" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_marginTop="355dp"
+        android:layout_marginLeft="11dp"
+        android:orientation="horizontal">
 
         <ToggleButton
             android:id="@+id/r_thursday"
@@ -158,7 +164,7 @@
             android:layout_height="wrap_content"
             android:text="5"
             android:textOff="Thur"
-            android:textOn="Yes" />
+            android:textOn="Thur" />
 
         <ToggleButton
             android:id="@+id/r_friday"
@@ -166,7 +172,7 @@
             android:layout_height="wrap_content"
             android:text="6"
             android:textOff="Fri"
-            android:textOn="Yes" />
+            android:textOn="Fri" />
 
         <ToggleButton
             android:id="@+id/r_saturday"
@@ -174,14 +180,16 @@
             android:layout_height="wrap_content"
             android:text="7"
             android:textOff="Sat"
-            android:textOn="Yes" />
+            android:textOn="Sat" />
 
-        <Button
-            android:id="@+id/button_create_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GO!"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button_create_event"
+        android:layout_gravity="bottom|right"
+        android:layout_marginTop="450dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Create Event"/>
 
-</LinearLayout>
+</FrameLayout>

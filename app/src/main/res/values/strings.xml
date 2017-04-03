@@ -84,4 +84,7 @@
     <string name="activity_title_privacy_policy">Privacy Policy</string>
     <string name="action_clear_all">Clear All</string>
     <string name="action_logout">Logout</string>
+
+    <!-- Strings related to Event Creating -->
+    <string name="date_selected"></string>
 </resources>
