@@ -27,8 +27,16 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         if (scheduleType.equals("User")) {
             schedule = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
+
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
+            Group g = DataManager.Instance().getGroups().get(groupKey);
+            if (g != null){
+                schedule = g.getGroupSchedule();
+            } else{
+                //TODO: Pop-up message about couldn't view group info
+                Intent i = new Intent(this, GroupMainPageActivity.class);
+                startActivity(i);
+            }
         }
 
         eventID = getIntent().getExtras().getString(DataManager.EVENT_ID_KEY);
@@ -59,10 +67,12 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
     private void fillInfo() {
         ScheduleEvent event = schedule.findEventByID(eventID);
 
-        txtName.setText(event.getEventName());
-        txtRecurrence.setText(event.getEventRecurrence());
-        txtWindow.setText(event.getEventWindow());
-        txtTime.setText(event.getEventTime());
+        if(event != null){
+            txtName.setText(event.getEventName());
+            txtRecurrence.setText(event.getEventRecurrence());
+            txtWindow.setText(event.getEventWindow());
+            txtTime.setText(event.getEventTime());
+        }
     }
 
     @Override

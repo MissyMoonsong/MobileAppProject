@@ -22,8 +22,6 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
 
-
-
         Firebase.setAndroidContext(this);
 
         btnAddMember = (Button)findViewById(R.id.btn_group_add_member);
@@ -36,8 +34,15 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         txtMemberName = (EditText)findViewById(R.id.txt_member_name);
 
         String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-        myGroup = DataManager.Instance().getGroups().get(groupKey);
-        myGroup.rebuildGroupSchedule(); //Refresh the group
+        Group g = DataManager.Instance().getGroups().get(groupKey);
+        if (g != null){
+            myGroup = DataManager.Instance().getGroups().get(groupKey);
+            myGroup.rebuildGroupSchedule(); //Refresh the group
+        } else{
+            //TODO: Pop-up message about couldn't view group info
+            Intent i = new Intent(this, GroupMainPageActivity.class);
+            startActivity(i);
+        }
 
         fillNames();
     }
@@ -46,6 +51,12 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         userList = (TextView)findViewById(R.id.txt_user_list);
         String text = "Group: " + myGroup.getName() + "\n" + myGroup.getMemberList();
         userList.setText(text);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        fillNames();
     }
 
     @Override

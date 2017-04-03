@@ -70,7 +70,14 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
              s = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-            s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
+            Group g = DataManager.Instance().getGroups().get(groupKey);
+            if (g != null){
+                s = g.getGroupSchedule();
+            } else{
+                //TODO: Pop-up message about couldn't return to group event list
+                Intent i = new Intent(this, GroupMainPageActivity.class);
+                startActivity(i);
+            }
         }
 
         events = s.getAllEvents();
