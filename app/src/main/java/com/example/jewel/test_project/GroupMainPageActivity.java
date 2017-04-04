@@ -159,6 +159,16 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
         super.onResume();
         //Refresh the list view
         fillList();
+
+
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mActivityTitle = getTitle().toString();
+        mDrawerList.bringToFront();
+        mDrawerLayout.requestLayout();
+        addDrawerItems();
+        setupDrawer();
+
     }
 
     public void toGroupDetails(Bundle b) {
