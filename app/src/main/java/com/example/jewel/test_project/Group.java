@@ -36,17 +36,15 @@ public class Group {
         for(Person p : members){
             addPersonalSchedule(p.getSchedule());
         }
-
-        /*TODO: Probably a good candidate for improving performance by
-         * creating blocks of "busy" time instead of having many events,
-         * which will probably have overlap
-         */
     }
 
     private void addPersonalSchedule(Schedule ps){
         //Adds a reference to each event in the person's schedule to the group schedule
         for(ScheduleEvent e : ps.getAllEvents()){
-            groupSchedule.addEvent(e);
+            //Check for if the event is already in the group schedule from another user
+            if(groupSchedule.findEventByID(e.getEventID()) != null){
+                groupSchedule.addEvent(e);
+            }
         }
     }
 

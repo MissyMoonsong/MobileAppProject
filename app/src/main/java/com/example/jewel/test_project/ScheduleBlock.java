@@ -80,4 +80,10 @@ public class ScheduleBlock implements Comparable<ScheduleBlock>{
         }
     }
 
+    @Override
+    public String toString(){
+        return getName() + ": " + DataManager.TIME_FORMATTER.format(getStartTime())
+                + " - " + DataManager.TIME_FORMATTER.format(getEndTime());
+    }
+
 }
