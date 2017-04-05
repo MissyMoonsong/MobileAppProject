@@ -27,6 +27,7 @@
         <activity android:name=".CreateEvent" />
         <activity android:name=".CreateGroup" />
         <activity android:name=".GroupDetails" />
+        <activity android:name=".HomeMainPageActivity" />
         <activity android:name=".EventAutoCreate" />
         <activity android:name=".EventDetails" />
         <activity android:name=".GroupMainPageActivity" />

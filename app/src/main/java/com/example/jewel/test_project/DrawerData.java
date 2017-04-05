@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 
 public class DrawerData {
     public static final String[] navArray = {"Home", "Self", "Groups", "About us"};
-    public static final Class[] classArray = {LoginActivity.class, EventListViewer.class, GroupMainPageActivity.class, AboutUs.class};
+    public static final Class[] classArray = {HomeMainPageActivity.class, EventListViewer.class, GroupMainPageActivity.class, AboutUs.class};
 
     private DrawerData(){
 
