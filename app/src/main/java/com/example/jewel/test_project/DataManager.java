@@ -1,9 +1,7 @@
 package com.example.jewel.test_project;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,11 +13,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
@@ -239,8 +234,12 @@ public class DataManager {
         groups.remove(groupID);
     }
 
-    public void addOtherUserToGroup(String groupID, String userLookup, Firebase ref, DataSnapshot dataSnapshot) {
-        Person p = DataManager.Instance().lookUpUser(userLookup, ref, dataSnapshot);
+    public void addOtherUserToGroup(String groupID, String userLookup, Firebase ref) {
+        CommandAddUserToGroup command = new CommandAddUserToGroup(groupID, userLookup, ref);
+        command.begin();
+    }
+
+    public void addOtherUserToGroup(String groupID, Person p, Firebase ref){
         if (p != null) {
             String userID = p.getUserID();
 
@@ -248,6 +247,7 @@ public class DataManager {
             addGroupToUserMembership(userID, groupID, ref);
         }
     }
+
 
     public void deleteUserEvent(String eventID) {
         //Deletes the event from THIS USER'S schedule
@@ -271,28 +271,6 @@ public class DataManager {
         });
     }
 
-    //TODO: REPLACE WITH SNAP
-    public Person lookUpUser(final String nameEmail, Firebase ref, DataSnapshot dataSnapshot) {
-        //Users stored in Firebase by Email
-        //TODO: Replace this with actually getting info from DB
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        Person otherUser = new Person(NULL, NULL);
-
-        //Convert email to username
-        //Add Username
-        String emailToL = nameEmail.toLowerCase();
-        String username = emailToL.replaceAll("\\W", "");
-
-        DatabaseUserID userSnapRef = dataSnapshot.child("Users").child(username).getValue(DatabaseUserID.class);
-
-        String otherUserID = userSnapRef.getUserID();
-        if (otherUserID != NULL) {
-            Person temp = new Person(username, otherUserID);
-            otherUser = temp;
-        }
-
-        return otherUser;
-}
 
     public void fillPersonObjectWithEvents(Person p, DataSnapshot snap) {
         String userID = p.getUserID();
@@ -319,18 +297,41 @@ public class DataManager {
 
         for (DataSnapshot m : groupMembership.getChildren()) {
             DatabaseGroupToUser gu = m.getValue(DatabaseGroupToUser.class);
-            String memberUN = FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase().replaceAll("\\W", "");
+            String memberUN = gu.getUserID();
 
             if (memberUN.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase().replaceAll("\\W", ""))) {
                 g.addMember(user);
             } else {
                 //Create a Person object
-                Firebase ref = new Firebase(Config.FIREBASE_URL);
-                Person p = lookUpUser(memberUN, ref, snap);
-                fillPersonObjectWithEvents(p, snap);
-                g.addMember(p);
+                Person p = new Person(getNameOfUser(memberUN, snap), memberUN);
+                    fillPersonObjectWithEvents(p, snap);
+                    g.addMember(p);
             }
         }
+    }
+
+    public String getNameOfUser(String userID, DataSnapshot snap){
+        //TODO: The thing
+        return "PLACEHOLDER";
+    }
+
+    public Person lookUpUserByEmail(String nameEmail, DataSnapshot dataSnapshot) {
+        //Users stored in Firebase by Email
+        Person otherUser = null;
+
+        //Convert email to username
+        String emailToL = nameEmail.toLowerCase();
+        String username = emailToL.replaceAll("\\W", "");
+
+        DatabaseUserID userSnapRef = dataSnapshot.child("Users").child(username).getValue(DatabaseUserID.class);
+
+        String otherUserID = userSnapRef.getUserID();
+        if (otherUserID != NULL) {
+            Person temp = new Person(username, otherUserID);
+            otherUser = temp;
+        }
+
+        return otherUser;
     }
 
     public String getNextEventID() {

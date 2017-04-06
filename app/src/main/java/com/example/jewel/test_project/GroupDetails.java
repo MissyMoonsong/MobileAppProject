@@ -70,9 +70,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             final String name = txtMemberName.getText().toString();
             if (name.length() > 0) {
 
-                //TODO: WE NEED A SNAPSHOT HERE
                 Firebase ref = new Firebase(Config.FIREBASE_URL);
-                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref, dataSnapshot);
+                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref);
                 //Refresh member names
                 fillNames();
 
@@ -92,3 +91,4 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+}
