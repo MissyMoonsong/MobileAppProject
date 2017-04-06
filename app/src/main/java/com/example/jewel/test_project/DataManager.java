@@ -299,7 +299,7 @@ public class DataManager {
             DatabaseGroupToUser gu = m.getValue(DatabaseGroupToUser.class);
             String memberUN = gu.getUserID();
 
-            if (memberUN.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail().toLowerCase().replaceAll("\\W", ""))) {
+            if (memberUN.equals(this.user.getUserID())) {
                 g.addMember(user);
             } else {
                 //Create a Person object
