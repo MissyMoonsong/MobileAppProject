@@ -96,8 +96,10 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Firebase ref = new Firebase(Config.FIREBASE_URL);
 
-                                    Firebase pushedGroupRef = ref.child("Users");
-                                    pushedGroupRef.child(username).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    ref.child("UsersNameToID").child(username).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    ref.child("UsersIDToName").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(username);
+
+                                    // pushed
                                     goToListView();
                                 }
                             }

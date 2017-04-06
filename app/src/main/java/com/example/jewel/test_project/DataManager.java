@@ -312,7 +312,8 @@ public class DataManager {
 
     public String getNameOfUser(String userID, DataSnapshot snap){
         //TODO: The thing
-        return "PLACEHOLDER";
+        String userName = (String) snap.child("UsersIDToName").child(userID).getValue();
+        return userName;
     }
 
     public Person lookUpUserByEmail(String nameEmail, DataSnapshot dataSnapshot) {
@@ -323,9 +324,8 @@ public class DataManager {
         String emailToL = nameEmail.toLowerCase();
         String username = emailToL.replaceAll("\\W", "");
 
-        DatabaseUserID userSnapRef = dataSnapshot.child("Users").child(username).getValue(DatabaseUserID.class);
+        String otherUserID = (String) dataSnapshot.child("UsersNameToID").child(username).getValue();
 
-        String otherUserID = userSnapRef.getUserID();
         if (otherUserID != NULL) {
             Person temp = new Person(username, otherUserID);
             otherUser = temp;

@@ -1,5 +1,7 @@
 package com.example.jewel.test_project;
 
+import android.widget.Toast;
+
 import com.firebase.client.Firebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,9 +36,7 @@ public class CommandAddUserToGroup {
                         String emailToL = userLookup.toLowerCase();
                         String username = emailToL.replaceAll("\\W", "");
 
-                        DatabaseUserID userSnapRef = dataSnapshot.child("Users").child(username).getValue(DatabaseUserID.class);
-
-                        userID = userSnapRef.getUserID();
+                        userID = (String) dataSnapshot.child("UsersNameToID").child(username).getValue();
 
                         executeCommand();
                     }
