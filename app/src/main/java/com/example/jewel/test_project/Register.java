@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -149,7 +151,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         //checking if success
                         if(task.isSuccessful()){
                             //display some message here
-
                             Toast.makeText(Register.this,"Successfully registered",Toast.LENGTH_LONG).show();
                         }else{
                             //display some message here

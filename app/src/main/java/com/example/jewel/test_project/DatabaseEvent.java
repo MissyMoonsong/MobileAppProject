@@ -10,7 +10,6 @@ import android.widget.ToggleButton;
 
 public class DatabaseEvent {
 
-    private Integer id;
     private String event_name;
     private Integer start_hour, start_min;
     private Integer end_hour, end_min;
@@ -22,7 +21,7 @@ public class DatabaseEvent {
       /*Blank default constructor essential for Firebase*/
     }
 
-        public String getEventName() {
+    public String getEventName() {
         return event_name;
     }
 

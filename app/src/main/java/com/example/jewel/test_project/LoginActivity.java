@@ -89,6 +89,15 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, "Invalid Login", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
+                                    //Add Username
+                                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                                    String emailToL = email.toLowerCase();
+                                    String username = emailToL.replaceAll("\\W", "");
+
+                                    Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                                    Firebase pushedGroupRef = ref.child("Users");
+                                    pushedGroupRef.child(username).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                     goToListView();
                                 }
                             }

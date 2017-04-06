@@ -10,8 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.client.Firebase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class GroupDetails extends AppCompatActivity implements View.OnClickListener{
+public class GroupDetails extends AppCompatActivity implements View.OnClickListener {
     Button btnAddMember, btnGoSchedule, btnLeave;
     TextView userList;
     EditText txtMemberName;
@@ -24,21 +29,21 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
 
         Firebase.setAndroidContext(this);
 
-        btnAddMember = (Button)findViewById(R.id.btn_group_add_member);
+        btnAddMember = (Button) findViewById(R.id.btn_group_add_member);
         btnAddMember.setOnClickListener(this);
-        btnGoSchedule = (Button)findViewById(R.id.btn_group_schedule);
+        btnGoSchedule = (Button) findViewById(R.id.btn_group_schedule);
         btnGoSchedule.setOnClickListener(this);
-        btnLeave = (Button)findViewById(R.id.btn_leave_group);
+        btnLeave = (Button) findViewById(R.id.btn_leave_group);
         btnLeave.setOnClickListener(this);
 
-        txtMemberName = (EditText)findViewById(R.id.txt_member_name);
+        txtMemberName = (EditText) findViewById(R.id.txt_member_name);
 
         String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
         Group g = DataManager.Instance().getGroups().get(groupKey);
-        if (g != null){
+        if (g != null) {
             myGroup = DataManager.Instance().getGroups().get(groupKey);
             myGroup.rebuildGroupSchedule(); //Refresh the group
-        } else{
+        } else {
             //TODO: Pop-up message about couldn't view group info
             Intent i = new Intent(this, GroupMainPageActivity.class);
             startActivity(i);
@@ -47,44 +52,43 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         fillNames();
     }
 
-    private void fillNames(){
-        userList = (TextView)findViewById(R.id.txt_user_list);
+    private void fillNames() {
+        userList = (TextView) findViewById(R.id.txt_user_list);
         String text = "Group: " + myGroup.getName() + "\n" + myGroup.getMemberList();
         userList.setText(text);
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         fillNames();
     }
 
     @Override
-    public void onClick(View view){
-        if(view == btnAddMember){
-            String name = txtMemberName.getText().toString();
-            if(name.length() > 0){
+    public void onClick(View view) {
+        if (view == btnAddMember) {
+            final String name = txtMemberName.getText().toString();
+            if (name.length() > 0) {
 
+                //TODO: WE NEED A SNAPSHOT HERE
                 Firebase ref = new Firebase(Config.FIREBASE_URL);
-                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref);
+                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref, dataSnapshot);
+                //Refresh member names
+                fillNames();
+
+            } else if (view == btnGoSchedule) {
+                Bundle b = new Bundle();
+                b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
+                b.putString(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
+
+                Intent intent = new Intent(this, EventListViewer.class);
+                intent.putExtras(b);
+                startActivity(intent);
+            } else if (view == btnLeave) {
+                DataManager.Instance().removeUserFromGroup(myGroup.getGroupID());
+                //Go Back
+                Intent intent = new Intent(this, GroupMainPageActivity.class);
+                startActivity(intent);
             }
-
-            //Refresh member names
-            fillNames();
-
-        } else if (view == btnGoSchedule){
-            Bundle b = new Bundle();
-            b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
-            b.putString(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
-
-            Intent intent = new Intent(this, EventListViewer.class);
-            intent.putExtras(b);
-            startActivity(intent);
-        } else if (view == btnLeave){
-            DataManager.Instance().removeUserFromGroup(myGroup.getGroupID());
-            //Go Back
-            Intent intent = new Intent(this, GroupMainPageActivity.class);
-            startActivity(intent);
         }
     }
-}
