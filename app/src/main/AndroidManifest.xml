@@ -31,7 +31,8 @@
         <activity android:name=".EventAutoCreate" />
         <activity android:name=".EventDetails" />
         <activity android:name=".GroupMainPageActivity" />
-        <activity android:name=".AboutUs"/>
+        <activity android:name=".AboutUs" />
+        <activity android:name=".TodaysEventsActivity"></activity>
     </application>
 
 </manifest>

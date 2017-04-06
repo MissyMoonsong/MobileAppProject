@@ -35,6 +35,16 @@ public class Schedule {
         events.remove(event);
     }
 
+    public List<ScheduleBlock> getBlocksForToday(){
+        CalendarDay today = new CalendarDay(Calendar.getInstance());
+
+        for(ScheduleEvent e : events){
+            e.generateBlockOnDay(today);
+        }
+
+        return today.getBlocksInDay();
+    }
+
     /***
      * Returnsa list of CalendarDays, with each day being populated with blocks
      * created from the events in this schedule at the time this method is called
