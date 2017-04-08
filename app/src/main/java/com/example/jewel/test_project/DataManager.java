@@ -95,7 +95,6 @@ public class DataManager {
      * @param scheduleType
      * @param groupKey
      */
-    //TODO: Number 1
     public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey, Firebase ref) {
 
         //Store values to firebase
@@ -126,7 +125,6 @@ public class DataManager {
         }
     }
 
-    //TODO: Number 2
     public void createGroupAndAddUser(String groupName, Firebase ref){
         Firebase pushedGroupRef = ref.child("Group").push();
         DatabaseGroup dgroup = new DatabaseGroup();
@@ -142,7 +140,6 @@ public class DataManager {
         DataManager.Instance().getGroups().put(g.getGroupID(), g);
     }
 
-    //TODO: Number 3
     private void addUserToGroupMembership(String userID, String groupID, Firebase ref){
         Firebase pushedMembershipRef = ref.child("MembershipUserToGroup").child(userID).push();
         DatabaseUserToGroup temp = new DatabaseUserToGroup();
@@ -150,7 +147,6 @@ public class DataManager {
         pushedMembershipRef.setValue(temp);
     }
 
-    //TODO: Number 4
     private void addGroupToUserMembership(String userID, String groupID, Firebase ref){
         Firebase pushedMembershipRef = ref.child("MembershipGroupToUser").child(groupID).push();
         DatabaseGroupToUser temp = new DatabaseGroupToUser();
@@ -158,7 +154,6 @@ public class DataManager {
         pushedMembershipRef.setValue(temp);
     }
 
-    //TODO: Number 5
     private void removeUserToGroupMembership(String userID, String groupID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         Query applesQuery = db.child("MembershipUserToGroup").child(userID).orderByChild("groupID").equalTo(groupID);
@@ -178,7 +173,6 @@ public class DataManager {
         });
     }
 
-    //TODO: Number 6
     private void removeGroupToUserMembership(String userID, String groupID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         Query applesQuery = db.child("MembershipGroupToUser").child(groupID).orderByChild("userID").equalTo(userID);
@@ -198,7 +192,6 @@ public class DataManager {
         });
     }
 
-    //TODO: Number 7
     public void removeUserFromGroup(String groupID){
         removeUserToGroupMembership(user.getUserID(), groupID);
         removeGroupToUserMembership(user.getUserID(), groupID);
@@ -206,7 +199,6 @@ public class DataManager {
         groups.remove(groupID);
     }
 
-    //TODO: Number 8
     public void addOtherNameUserToGroup(String groupID, String userEmail, Firebase ref, DataSnapshot snap){
         Person p = DataManager.Instance().lookUpUserByEmail(userEmail, snap);
         if(p != null) {
@@ -217,7 +209,6 @@ public class DataManager {
         }
     }
 
-    //TODO: Number 9
     public void addOtherPersonUserToGroup(String groupID, Person p, Firebase ref) {
         if (p != null) {
             String userID = p.getUserID();
@@ -227,7 +218,6 @@ public class DataManager {
         }
     }
 
-    //TODO: Number 10
     public void deleteUserEvent(String eventID){
         //Deletes the event from THIS USER'S schedule
         user.getSchedule().removeEvent(user.getSchedule().findEventByID(eventID));
@@ -250,7 +240,6 @@ public class DataManager {
         });
     }
 
-    //TODO: Number 12
     public void fillPersonObjectWithEvents(Person p, DataSnapshot snap){
         String userID = p.getUserID();
 
@@ -269,7 +258,6 @@ public class DataManager {
         }
     }
 
-    //TODO: Number 13
     public void fillGroupWithMembers(Group g, DataSnapshot snap){
         String groupID = g.getGroupID();
 
@@ -290,13 +278,11 @@ public class DataManager {
         }
     }
 
-    //TODO: Number 14
     public String lookUpUserByID(String userID, DataSnapshot snap){
         String userName = (String) snap.child("UsersIDToName").child(userID).getValue();
         return userName;
     }
 
-    //TODO: Number 15
     public Person lookUpUserByEmail(String nameEmail, DataSnapshot dataSnapshot) {
         //Users stored in Firebase by Email
         Person otherUser = null;
@@ -315,7 +301,6 @@ public class DataManager {
         return otherUser;
     }
 
-    //TODO: Number 16
     public void refreshWithSnap(DataSnapshot snap) {
         //Get current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -347,7 +332,6 @@ public class DataManager {
         }
     }
 
-    //TODO: Number 17
     public void refreshFromDatabase(){
         groups = new HashMap<>();
 
@@ -368,7 +352,6 @@ public class DataManager {
         );
     }
 
-    //TODO: Number 18
     public static ScheduleEvent buildScheduleEventFromEvent(DatabaseEvent ev) {
         String eName = ev.getEventName();
 

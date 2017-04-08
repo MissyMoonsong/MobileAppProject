@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -56,7 +57,8 @@ public class TodaysEventsActivity extends AppCompatActivity implements View.OnCl
             if (g != null){
                 s = g.getGroupSchedule();
             } else{
-                //TODO: Pop-up message about couldn't return to group event list
+                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
+
                 Intent i = new Intent(this, GroupMainPageActivity.class);
                 startActivity(i);
             }

@@ -12,7 +12,7 @@ public class ScheduleEvent {
     private boolean isRecurring;
     private boolean[] activeWeekdays = new boolean[7]; //Note: SUNDAY is the first day
     private String eventName;
-    private String eventID; //TODO: get this from database
+    private String eventID;
 
     /***
      * This is the constructor used for a one-time event.

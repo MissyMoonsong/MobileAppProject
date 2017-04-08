@@ -45,7 +45,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             myGroup = DataManager.Instance().getGroups().get(groupKey);
             myGroup.rebuildGroupSchedule(); //Refresh the group
         } else {
-            //TODO: Pop-up message about couldn't view group info
+            Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
+
             Intent i = new Intent(this, GroupMainPageActivity.class);
             startActivity(i);
         }
