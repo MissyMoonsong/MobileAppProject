@@ -143,23 +143,30 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         progressDialog.setMessage("Registering Please Wait...");
         progressDialog.show();
 
-        //creating a new user
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //checking if success
-                        if(task.isSuccessful()){
-                            //display some message here
-                            Toast.makeText(Register.this,"Successfully registered",Toast.LENGTH_LONG).show();
-                        }else{
-                            //display some message here
-                            Toast.makeText(Register.this,"Registration Error",Toast.LENGTH_LONG).show();
-                        }
-                        progressDialog.dismiss();
-                    }
-                });
+        //Check for network Connection
+        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
 
+
+        if (networkConnection == true) {
+            //creating a new user
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            //checking if success
+                            if (task.isSuccessful()) {
+                                //display some message here
+                                Toast.makeText(Register.this, "Successfully registered", Toast.LENGTH_LONG).show();
+                            } else {
+                                //display some message here
+                                Toast.makeText(Register.this, "Registration Error", Toast.LENGTH_LONG).show();
+                            }
+                            progressDialog.dismiss();
+                        }
+                    });
+        } else {
+            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

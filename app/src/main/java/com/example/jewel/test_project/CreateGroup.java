@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -33,7 +34,15 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         if(name.length() > 0){
             //Creating firebase object
             Firebase ref = new Firebase(Config.FIREBASE_URL);
-            DataManager.Instance().createGroupAndAddUser(name, ref);
+
+            //Check for network Connection
+            boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+            if (networkConnection == true) {
+                DataManager.Instance().createGroupAndAddUser(name, ref);
+            } else {
+                Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+            }
         }
 
         Intent intent = new Intent(this, GroupMainPageActivity.class);

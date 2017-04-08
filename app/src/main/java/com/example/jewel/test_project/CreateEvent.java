@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
@@ -61,7 +62,8 @@ public class CreateEvent extends AppCompatActivity {
             if (g != null){
                 schedule = g.getGroupSchedule();
             } else{
-                //TODO: Pop-up message about group not being valid
+                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
+
                 Intent i = new Intent(this, GroupMainPageActivity.class);
                 startActivity(i);
             }
@@ -84,10 +86,16 @@ public class CreateEvent extends AppCompatActivity {
 
                 DatabaseEvent event = fillEvent();
 
-                //Add event to app -- no DB variant
-                ScheduleEvent se = DataManager.buildScheduleEventFromEvent(event);
+                //Check for network Connection
+                boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
 
-                DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey, ref);
+                if (networkConnection == true) {
+                    //Add event to app -- no DB variant
+                    ScheduleEvent se = DataManager.buildScheduleEventFromEvent(event);
+                    DataManager.Instance().addUnpublishedEvent(se, scheduleType, groupKey, ref);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+                }
 
                 //Go to list again
                 returnToList();

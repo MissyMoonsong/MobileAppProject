@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -33,7 +34,8 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
             if (g != null){
                 schedule = g.getGroupSchedule();
             } else{
-                //TODO: Pop-up message about couldn't view group info
+                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
+
                 Intent i = new Intent(this, GroupMainPageActivity.class);
                 startActivity(i);
             }
@@ -90,7 +92,15 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
 
         } else if (view == btnDelete) {
-            DataManager.Instance().deleteUserEvent(eventID);
+
+            //Check for network Connection
+            boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+            if (networkConnection == true) {
+                DataManager.Instance().deleteUserEvent(eventID);
+            } else {
+                Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+            }
 
             //Go back to list view
             startActivity(intent);

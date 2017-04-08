@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class AboutUs extends AppCompatActivity implements View.OnClickListener{
     //for the menu
@@ -26,7 +27,15 @@ public class AboutUs extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
 
-        DataManager.Instance().refreshFromDatabase();
+        //TODO: DO WE NEED THIS HERE?
+        //Check for network Connection
+        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+        if (networkConnection == true) {
+            DataManager.Instance().refreshFromDatabase();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+        }
 
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);

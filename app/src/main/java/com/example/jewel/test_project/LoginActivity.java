@@ -44,9 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
-
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,38 +69,45 @@ public class LoginActivity extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                //authenticate user
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                progressBar.setVisibility(View.GONE);
-                                if (!task.isSuccessful()) {
-                                    // there was an error
-                                    if (password.length() < 6) {
-                                        inputPassword.setError("Password must be 6 characters long");
+                //Check for network Connection
+                boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+                if (networkConnection == true) {
+                    //authenticate user
+                    auth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    progressBar.setVisibility(View.GONE);
+                                    if (!task.isSuccessful()) {
+                                        // there was an error
+                                        if (password.length() < 6) {
+                                            inputPassword.setError("Password must be 6 characters long");
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Invalid Login", Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(LoginActivity.this, "Invalid Login", Toast.LENGTH_LONG).show();
+                                        //Add Username
+                                        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                                        String emailToL = email.toLowerCase();
+                                        String username = emailToL.replaceAll("\\W", "");
+
+                                        Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                                        ref.child("UsersNameToID").child(username).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        ref.child("UsersIDToName").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(username);
+
+                                        // pushed
+                                        goToListView();
                                     }
-                                } else {
-                                    //Add Username
-                                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                                    String emailToL = email.toLowerCase();
-                                    String username = emailToL.replaceAll("\\W", "");
-
-                                    Firebase ref = new Firebase(Config.FIREBASE_URL);
-
-                                    ref.child("UsersNameToID").child(username).setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                    ref.child("UsersIDToName").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(username);
-
-                                    // pushed
-                                    goToListView();
                                 }
-                            }
-                        });
+                            });
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import java.util.ArrayList;
@@ -72,7 +73,8 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
             if (g != null){
                 s = g.getGroupSchedule();
             } else{
-                //TODO: Pop-up message about couldn't return to group event list
+                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
+
                 Intent i = new Intent(this, GroupMainPageActivity.class);
                 startActivity(i);
             }

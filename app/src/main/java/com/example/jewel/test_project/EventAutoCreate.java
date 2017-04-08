@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -47,7 +48,8 @@ public class EventAutoCreate extends AppCompatActivity {
             if (g != null){
                 schedule = g.getGroupSchedule();
             } else{
-                //TODO: Pop-up message about group not being valid
+                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
+
                 Intent i = new Intent(this, GroupMainPageActivity.class);
                 startActivity(i);
             }
@@ -87,7 +89,15 @@ public class EventAutoCreate extends AppCompatActivity {
                     event.changeName(eventName);
                     //Creating firebase object
                     Firebase ref = new Firebase(Config.FIREBASE_URL);
-                    DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey, ref);
+
+                    //Check for network Connection
+                    boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+                    if (networkConnection == true) {
+                        DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey, ref);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 //Go to list again

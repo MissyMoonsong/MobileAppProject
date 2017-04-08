@@ -55,11 +55,8 @@ public class DataManager {
         user = new Person("Phone Owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
         groups = new HashMap<>();
 
-        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference().getRoot();
-        //createDummySchedule(); //TODO: Remove this when database works
-
-
-        refreshFromDatabase();
+        //TODO: DOES THIS NEED TO BE HREE?
+        //refreshFromDatabase();
     }
 
     public static DataManager Instance() {
@@ -84,52 +81,13 @@ public class DataManager {
                 && c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH);
     }
 
-    //TODO: Replace this with something for loading real schedules or something
-    private void createDummySchedule() {
-        user = new Person("Phone Owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        groups = new HashMap<>();
+    public boolean haveConnection(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        Calendar start1 = Calendar.getInstance();
-        Calendar end1 = Calendar.getInstance();
-        Calendar start2 = Calendar.getInstance();
-        Calendar end2 = Calendar.getInstance();
-
-        start1.set(2017, 3, 10, 0, 0);
-        end1.set(2017, 3, 17, 1, 0);
-
-        start2.set(2017, 3, 11, 8, 30);
-        end2.set(2017, 3, 11, 9, 0);
-
-
-        boolean[] weekdays = new boolean[]{true, true, true, true, true, true, true};
-
-        ScheduleEvent recurring = new ScheduleEvent("Recurring Event", start1, end1, weekdays);
-        recurring.setEventID(getNextEventID());
-        ScheduleEvent oneTime = new ScheduleEvent("One Time Event", start2, end2);
-        oneTime.setEventID(getNextEventID());
-
-        user.getSchedule().addEvent(recurring);
-        user.getSchedule().addEvent(oneTime);
-
-        //Creating a second Person
-        Person friend = new Person("Friend", getNextUserID());
-        Calendar startF = Calendar.getInstance();
-        Calendar endF = Calendar.getInstance();
-        startF.set(2017, 3, 10, 1, 0);
-        endF.set(2017, 3, 17, 2, 0);
-
-        ScheduleEvent oneTimeF = new ScheduleEvent("Friend's Event", startF, endF);
-        oneTimeF.setEventID(getNextEventID());
-
-        friend.getSchedule().addEvent(oneTimeF);
-
-        //Creating a Group
-        Group g = new Group("Test Group", getNextGroupID());
-        groups.put(g.getGroupID(), g);
-        g.addMember(user);
-        g.addMember(friend);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
-
 
     /***
      * This also gives the Event its EventID, maybe
@@ -137,7 +95,9 @@ public class DataManager {
      * @param scheduleType
      * @param groupKey
      */
+    //TODO: Number 1
     public void addUnpublishedEvent(ScheduleEvent event, String scheduleType, String groupKey, Firebase ref) {
+
         //Store values to firebase
         Firebase pushedEventRef = ref.child("Event").push();
         pushedEventRef.setValue(event.toDatabaseEvent());
@@ -166,21 +126,23 @@ public class DataManager {
         }
     }
 
-    public void createGroupAndAddUser(String groupName, Firebase gref){
-        Firebase pushedGroupRef = gref.child("Group").push();
+    //TODO: Number 2
+    public void createGroupAndAddUser(String groupName, Firebase ref){
+        Firebase pushedGroupRef = ref.child("Group").push();
         DatabaseGroup dgroup = new DatabaseGroup();
         dgroup.setGroupName(groupName);
         pushedGroupRef.setValue(dgroup);
         String groupId = pushedGroupRef.getKey();
 
-        addUserToGroupMembership(user.getUserID(), groupId, gref);
-        addGroupToUserMembership(user.getUserID(), groupId, gref);
+        addUserToGroupMembership(user.getUserID(), groupId, ref);
+        addGroupToUserMembership(user.getUserID(), groupId, ref);
 
         Group g = new Group(groupName, groupId);
         g.addMember(DataManager.Instance().getUser());
         DataManager.Instance().getGroups().put(g.getGroupID(), g);
     }
 
+    //TODO: Number 3
     private void addUserToGroupMembership(String userID, String groupID, Firebase ref){
         Firebase pushedMembershipRef = ref.child("MembershipUserToGroup").child(userID).push();
         DatabaseUserToGroup temp = new DatabaseUserToGroup();
@@ -188,6 +150,7 @@ public class DataManager {
         pushedMembershipRef.setValue(temp);
     }
 
+    //TODO: Number 4
     private void addGroupToUserMembership(String userID, String groupID, Firebase ref){
         Firebase pushedMembershipRef = ref.child("MembershipGroupToUser").child(groupID).push();
         DatabaseGroupToUser temp = new DatabaseGroupToUser();
@@ -195,6 +158,7 @@ public class DataManager {
         pushedMembershipRef.setValue(temp);
     }
 
+    //TODO: Number 5
     private void removeUserToGroupMembership(String userID, String groupID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         Query applesQuery = db.child("MembershipUserToGroup").child(userID).orderByChild("groupID").equalTo(groupID);
@@ -214,6 +178,7 @@ public class DataManager {
         });
     }
 
+    //TODO: Number 6
     private void removeGroupToUserMembership(String userID, String groupID) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         Query applesQuery = db.child("MembershipGroupToUser").child(groupID).orderByChild("userID").equalTo(userID);
@@ -233,7 +198,7 @@ public class DataManager {
         });
     }
 
-
+    //TODO: Number 7
     public void removeUserFromGroup(String groupID){
         removeUserToGroupMembership(user.getUserID(), groupID);
         removeGroupToUserMembership(user.getUserID(), groupID);
@@ -241,8 +206,9 @@ public class DataManager {
         groups.remove(groupID);
     }
 
-    public void addOtherNameUserToGroup(String groupID, String userLookup, Firebase ref){
-        Person p = DataManager.Instance().lookUpUser(userLookup, ref);
+    //TODO: Number 8
+    public void addOtherNameUserToGroup(String groupID, String userEmail, Firebase ref, DataSnapshot snap){
+        Person p = DataManager.Instance().lookUpUserByEmail(userEmail, snap);
         if(p != null) {
             String userID = p.getUserID();
 
@@ -251,6 +217,7 @@ public class DataManager {
         }
     }
 
+    //TODO: Number 9
     public void addOtherPersonUserToGroup(String groupID, Person p, Firebase ref) {
         if (p != null) {
             String userID = p.getUserID();
@@ -260,7 +227,7 @@ public class DataManager {
         }
     }
 
-
+    //TODO: Number 10
     public void deleteUserEvent(String eventID){
         //Deletes the event from THIS USER'S schedule
         user.getSchedule().removeEvent(user.getSchedule().findEventByID(eventID));
@@ -283,14 +250,7 @@ public class DataManager {
         });
     }
 
-    public Person lookUpUser(String nameEmail, Firebase ref) {
-        //Users stored in Firebase by Email
-        //TODO: Replace this with actually getting info from DB
-        //Return NULL if no such user exists
-
-        return new Person(nameEmail, nameEmail);
-    }
-
+    //TODO: Number 12
     public void fillPersonObjectWithEvents(Person p, DataSnapshot snap){
         String userID = p.getUserID();
 
@@ -309,6 +269,7 @@ public class DataManager {
         }
     }
 
+    //TODO: Number 13
     public void fillGroupWithMembers(Group g, DataSnapshot snap){
         String groupID = g.getGroupID();
 
@@ -322,19 +283,20 @@ public class DataManager {
                 g.addMember(user);
             } else{
                 //Create a Person object
-                Person p = lookUpUser(memberID, new Firebase(Config.FIREBASE_URL));
+                Person p = new Person(lookUpUserByID(memberID, snap), memberID);
                 fillPersonObjectWithEvents(p, snap);
                 g.addMember(p);
             }
         }
     }
 
-    public String getNameOfUser(String userID, DataSnapshot snap){
-        //TODO: The thing
+    //TODO: Number 14
+    public String lookUpUserByID(String userID, DataSnapshot snap){
         String userName = (String) snap.child("UsersIDToName").child(userID).getValue();
         return userName;
     }
 
+    //TODO: Number 15
     public Person lookUpUserByEmail(String nameEmail, DataSnapshot dataSnapshot) {
         //Users stored in Firebase by Email
         Person otherUser = null;
@@ -353,25 +315,8 @@ public class DataManager {
         return otherUser;
     }
 
-    public String getNextEventID() {
-        String val = Integer.toString(nextEventID);
-        nextEventID++;
-        return val;
-    }
-
-    public String getNextGroupID() {
-        String val = Integer.toString(nextGroupID);
-        nextGroupID++;
-        return val;
-    }
-
-    public String getNextUserID() {
-        String val = Integer.toString(nextUserID);
-        nextUserID++;
-        return val;
-    }
-
-    public void refreshWithSnap(DataSnapshot dataSnapshot) {
+    //TODO: Number 16
+    public void refreshWithSnap(DataSnapshot snap) {
         //Get current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -380,28 +325,29 @@ public class DataManager {
         String name =  user.getEmail();
         //Set up user object
         this.user = new Person(name, userID);
-        fillPersonObjectWithEvents(this.user, dataSnapshot);
+        fillPersonObjectWithEvents(this.user,  snap);
 
         //get all groups user is in
-        DataSnapshot userGroups = dataSnapshot.child("MembershipUserToGroup").child(userID);
+        DataSnapshot userGroups =  snap.child("MembershipUserToGroup").child(userID);
         //For reach group
         for(DataSnapshot userGroup : userGroups.getChildren()){
             DatabaseUserToGroup ug = userGroup.getValue(DatabaseUserToGroup.class);
             String groupID = ug.getGroupID();
 
             //Get group name
-            DatabaseGroup dbGroup = dataSnapshot.child("Group").child(groupID).getValue(DatabaseGroup.class);
+            DatabaseGroup dbGroup =  snap.child("Group").child(groupID).getValue(DatabaseGroup.class);
             String groupName = dbGroup.getGroupName();
 
             Group g = new Group(groupName, groupID);
             groups.put(groupID, g);
 
-            fillGroupWithMembers(g, dataSnapshot);
+            fillGroupWithMembers(g,  snap);
 
             g.rebuildGroupSchedule();
         }
     }
 
+    //TODO: Number 17
     public void refreshFromDatabase(){
         groups = new HashMap<>();
 
@@ -422,6 +368,7 @@ public class DataManager {
         );
     }
 
+    //TODO: Number 18
     public static ScheduleEvent buildScheduleEventFromEvent(DatabaseEvent ev) {
         String eName = ev.getEventName();
 

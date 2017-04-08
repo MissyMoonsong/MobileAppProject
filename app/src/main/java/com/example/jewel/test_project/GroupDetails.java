@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.database.DataSnapshot;
@@ -70,24 +71,57 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             final String name = txtMemberName.getText().toString();
             if (name.length() > 0) {
 
-                Firebase ref = new Firebase(Config.FIREBASE_URL);
-                DataManager.Instance().addOtherNameUserToGroup(myGroup.getGroupID(), name, ref);
+                final Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                //Check for network Connection
+                boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+                if (networkConnection == true) {
+                    //Get user's ID from the database
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+
+                    db.addListenerForSingleValueEvent(
+                            new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    DataManager.Instance().addOtherNameUserToGroup(myGroup.getGroupID(), name, ref, dataSnapshot);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            }
+                    );
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+                }
+
                 //Refresh member names
                 fillNames();
-            } else if (view == btnGoSchedule) {
-                Bundle b = new Bundle();
-                b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
-                b.putString(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
-
-                Intent intent = new Intent(this, EventListViewer.class);
-                intent.putExtras(b);
-                startActivity(intent);
-            } else if (view == btnLeave) {
-                DataManager.Instance().removeUserFromGroup(myGroup.getGroupID());
-                //Go Back
-                Intent intent = new Intent(this, GroupMainPageActivity.class);
-                startActivity(intent);
             }
+        } else if (view == btnGoSchedule) {
+            Bundle b = new Bundle();
+            b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");
+            b.putString(DataManager.GROUP_ID_KEY, myGroup.getGroupID());
+
+            Intent intent = new Intent(this, EventListViewer.class);
+            intent.putExtras(b);
+            startActivity(intent);
+        } else if (view == btnLeave) {
+
+            //Check for network Connection
+            boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+            if (networkConnection == true) {
+                DataManager.Instance().removeUserFromGroup(myGroup.getGroupID());
+            } else {
+                Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+            }
+
+            //Go Back
+            Intent intent = new Intent(this, GroupMainPageActivity.class);
+            startActivity(intent);
         }
     }
 }
