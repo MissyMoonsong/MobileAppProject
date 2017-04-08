@@ -53,7 +53,7 @@ public class CommandAddUserToGroup {
     public void executeCommand(){
         if(userID != null) {
             Person p = new Person(userLookup, userID);
-            DataManager.Instance().addOtherUserToGroup(groupID, p, ref);
+            DataManager.Instance().addOtherPersonUserToGroup(groupID, p, ref);
         }
     }
 }

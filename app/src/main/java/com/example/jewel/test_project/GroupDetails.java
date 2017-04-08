@@ -71,10 +71,9 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
             if (name.length() > 0) {
 
                 Firebase ref = new Firebase(Config.FIREBASE_URL);
-                DataManager.Instance().addOtherUserToGroup(myGroup.getGroupID(), name, ref);
+                DataManager.Instance().addOtherNameUserToGroup(myGroup.getGroupID(), name, ref);
                 //Refresh member names
                 fillNames();
-
             } else if (view == btnGoSchedule) {
                 Bundle b = new Bundle();
                 b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");

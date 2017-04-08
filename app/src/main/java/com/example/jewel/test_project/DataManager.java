@@ -1,5 +1,9 @@
 package com.example.jewel.test_project;
 
+import android.provider.ContactsContract;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.firebase.client.Firebase;
@@ -13,10 +17,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
 /**
@@ -124,6 +130,7 @@ public class DataManager {
         g.addMember(friend);
     }
 
+
     /***
      * This also gives the Event its EventID, maybe
      * @param event
@@ -159,7 +166,7 @@ public class DataManager {
         }
     }
 
-    public void createGroupAndAddUser(String groupName, Firebase gref) {
+    public void createGroupAndAddUser(String groupName, Firebase gref){
         Firebase pushedGroupRef = gref.child("Group").push();
         DatabaseGroup dgroup = new DatabaseGroup();
         dgroup.setGroupName(groupName);
@@ -174,14 +181,14 @@ public class DataManager {
         DataManager.Instance().getGroups().put(g.getGroupID(), g);
     }
 
-    private void addUserToGroupMembership(String userID, String groupID, Firebase ref) {
+    private void addUserToGroupMembership(String userID, String groupID, Firebase ref){
         Firebase pushedMembershipRef = ref.child("MembershipUserToGroup").child(userID).push();
         DatabaseUserToGroup temp = new DatabaseUserToGroup();
         temp.setGroupID(groupID);
         pushedMembershipRef.setValue(temp);
     }
 
-    private void addGroupToUserMembership(String userID, String groupID, Firebase ref) {
+    private void addGroupToUserMembership(String userID, String groupID, Firebase ref){
         Firebase pushedMembershipRef = ref.child("MembershipGroupToUser").child(groupID).push();
         DatabaseGroupToUser temp = new DatabaseGroupToUser();
         temp.setUserID(userID);
@@ -195,7 +202,7 @@ public class DataManager {
         applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot membership : dataSnapshot.getChildren()) {
+                for (DataSnapshot membership: dataSnapshot.getChildren()) {
                     membership.getRef().removeValue();
                 }
             }
@@ -214,7 +221,7 @@ public class DataManager {
         applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot membership : dataSnapshot.getChildren()) {
+                for (DataSnapshot membership: dataSnapshot.getChildren()) {
                     membership.getRef().removeValue();
                 }
             }
@@ -227,19 +234,24 @@ public class DataManager {
     }
 
 
-    public void removeUserFromGroup(String groupID) {
+    public void removeUserFromGroup(String groupID){
         removeUserToGroupMembership(user.getUserID(), groupID);
         removeGroupToUserMembership(user.getUserID(), groupID);
 
         groups.remove(groupID);
     }
 
-    public void addOtherUserToGroup(String groupID, String userLookup, Firebase ref) {
-        CommandAddUserToGroup command = new CommandAddUserToGroup(groupID, userLookup, ref);
-        command.begin();
+    public void addOtherNameUserToGroup(String groupID, String userLookup, Firebase ref){
+        Person p = DataManager.Instance().lookUpUser(userLookup, ref);
+        if(p != null) {
+            String userID = p.getUserID();
+
+            addUserToGroupMembership(userID, groupID, ref);
+            addGroupToUserMembership(userID, groupID, ref);
+        }
     }
 
-    public void addOtherUserToGroup(String groupID, Person p, Firebase ref){
+    public void addOtherPersonUserToGroup(String groupID, Person p, Firebase ref) {
         if (p != null) {
             String userID = p.getUserID();
 
@@ -249,7 +261,7 @@ public class DataManager {
     }
 
 
-    public void deleteUserEvent(String eventID) {
+    public void deleteUserEvent(String eventID){
         //Deletes the event from THIS USER'S schedule
         user.getSchedule().removeEvent(user.getSchedule().findEventByID(eventID));
 
@@ -259,7 +271,7 @@ public class DataManager {
         eventQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot membership : dataSnapshot.getChildren()) {
+                for (DataSnapshot membership: dataSnapshot.getChildren()) {
                     membership.getRef().removeValue();
                 }
             }
@@ -271,12 +283,19 @@ public class DataManager {
         });
     }
 
+    public Person lookUpUser(String nameEmail, Firebase ref) {
+        //Users stored in Firebase by Email
+        //TODO: Replace this with actually getting info from DB
+        //Return NULL if no such user exists
 
-    public void fillPersonObjectWithEvents(Person p, DataSnapshot snap) {
+        return new Person(nameEmail, nameEmail);
+    }
+
+    public void fillPersonObjectWithEvents(Person p, DataSnapshot snap){
         String userID = p.getUserID();
 
         DataSnapshot userEventList = snap.child("Schedules").child(userID);
-        for (DataSnapshot e : userEventList.getChildren()) {
+        for(DataSnapshot e : userEventList.getChildren()){
             DatabaseScheduleEvent ev = e.getValue(DatabaseScheduleEvent.class);
             String eventID = ev.getEventID();
 
@@ -290,22 +309,22 @@ public class DataManager {
         }
     }
 
-    public void fillGroupWithMembers(Group g, DataSnapshot snap) {
+    public void fillGroupWithMembers(Group g, DataSnapshot snap){
         String groupID = g.getGroupID();
 
         DataSnapshot groupMembership = snap.child("MembershipGroupToUser").child(groupID);
 
-        for (DataSnapshot m : groupMembership.getChildren()) {
+        for(DataSnapshot m : groupMembership.getChildren()){
             DatabaseGroupToUser gu = m.getValue(DatabaseGroupToUser.class);
-            String memberUN = gu.getUserID();
+            String memberID = gu.getUserID();
 
-            if (memberUN.equals(this.user.getUserID())) {
+            if(memberID.equals(user.getUserID())) {
                 g.addMember(user);
-            } else {
+            } else{
                 //Create a Person object
-                Person p = new Person(getNameOfUser(memberUN, snap), memberUN);
-                    fillPersonObjectWithEvents(p, snap);
-                    g.addMember(p);
+                Person p = lookUpUser(memberID, new Firebase(Config.FIREBASE_URL));
+                fillPersonObjectWithEvents(p, snap);
+                g.addMember(p);
             }
         }
     }
@@ -358,7 +377,7 @@ public class DataManager {
 
         //Get user id
         String userID = user.getUid();
-        String name = user.getEmail();
+        String name =  user.getEmail();
         //Set up user object
         this.user = new Person(name, userID);
         fillPersonObjectWithEvents(this.user, dataSnapshot);
@@ -366,7 +385,7 @@ public class DataManager {
         //get all groups user is in
         DataSnapshot userGroups = dataSnapshot.child("MembershipUserToGroup").child(userID);
         //For reach group
-        for (DataSnapshot userGroup : userGroups.getChildren()) {
+        for(DataSnapshot userGroup : userGroups.getChildren()){
             DatabaseUserToGroup ug = userGroup.getValue(DatabaseUserToGroup.class);
             String groupID = ug.getGroupID();
 
@@ -383,7 +402,7 @@ public class DataManager {
         }
     }
 
-    public void refreshFromDatabase() {
+    public void refreshFromDatabase(){
         groups = new HashMap<>();
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
