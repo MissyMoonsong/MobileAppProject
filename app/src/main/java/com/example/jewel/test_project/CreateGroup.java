@@ -35,7 +35,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             //Creating firebase object
             Firebase ref = new Firebase(Config.FIREBASE_URL);
 
-            //TODO: ADDED NETWORK CONNECTIOn CHECK
             //Check for network Connection
             boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
 
