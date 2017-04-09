@@ -58,15 +58,7 @@ public class CreateEvent extends AppCompatActivity {
             schedule = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-            Group g = DataManager.Instance().getGroups().get(groupKey);
-            if (g != null){
-                schedule = g.getGroupSchedule();
-            } else{
-                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
-
-                Intent i = new Intent(this, GroupMainPageActivity.class);
-                startActivity(i);
-            }
+            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
         //Setting all the view variables

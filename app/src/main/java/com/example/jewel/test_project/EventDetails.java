@@ -28,17 +28,8 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
         if (scheduleType.equals("User")) {
             schedule = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
-
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-            Group g = DataManager.Instance().getGroups().get(groupKey);
-            if (g != null){
-                schedule = g.getGroupSchedule();
-            } else{
-                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
-
-                Intent i = new Intent(this, GroupMainPageActivity.class);
-                startActivity(i);
-            }
+            schedule = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
         eventID = getIntent().getExtras().getString(DataManager.EVENT_ID_KEY);
@@ -69,12 +60,12 @@ public class EventDetails extends AppCompatActivity implements View.OnClickListe
     private void fillInfo() {
         ScheduleEvent event = schedule.findEventByID(eventID);
 
-        if(event != null){
+        //if(event != null){
             txtName.setText(event.getEventName());
             txtRecurrence.setText(event.getEventRecurrence());
             txtWindow.setText(event.getEventWindow());
             txtTime.setText(event.getEventTime());
-        }
+        //}
     }
 
     @Override

@@ -27,15 +27,7 @@ public class AboutUs extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
 
-        //TODO: DO WE NEED THIS HERE?
-        //Check for network Connection
-        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
-
-        if (networkConnection == true) {
-            DataManager.Instance().refreshFromDatabase();
-        } else {
-            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
-        }
+        DataManager.Instance().refreshFromDatabase();
 
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);

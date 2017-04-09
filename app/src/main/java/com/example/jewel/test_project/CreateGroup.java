@@ -35,11 +35,13 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             //Creating firebase object
             Firebase ref = new Firebase(Config.FIREBASE_URL);
 
+            //TODO: ADDED NETWORK CONNECTIOn CHECK
             //Check for network Connection
             boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
 
             if (networkConnection == true) {
                 DataManager.Instance().createGroupAndAddUser(name, ref);
+                Toast.makeText(getApplicationContext(), "Group Successfully Created", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
             }

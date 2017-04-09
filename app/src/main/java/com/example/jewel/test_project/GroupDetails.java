@@ -27,7 +27,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_details);
-
+        //DataManager.Instance().refreshFromDatabase();
         Firebase.setAndroidContext(this);
 
         btnAddMember = (Button) findViewById(R.id.btn_group_add_member);
@@ -40,16 +40,8 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         txtMemberName = (EditText) findViewById(R.id.txt_member_name);
 
         String groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-        Group g = DataManager.Instance().getGroups().get(groupKey);
-        if (g != null) {
-            myGroup = DataManager.Instance().getGroups().get(groupKey);
-            myGroup.rebuildGroupSchedule(); //Refresh the group
-        } else {
-            Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
-
-            Intent i = new Intent(this, GroupMainPageActivity.class);
-            startActivity(i);
-        }
+        myGroup = DataManager.Instance().getGroups().get(groupKey);
+        myGroup.rebuildGroupSchedule(); //Refresh the group
 
         fillNames();
     }
@@ -60,11 +52,6 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
         userList.setText(text);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        fillNames();
-    }
 
     @Override
     public void onClick(View view) {
@@ -97,10 +84,9 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
                 } else {
                     Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
                 }
-
-                //Refresh member names
-                fillNames();
             }
+            //Refresh member names
+            fillNames();
         } else if (view == btnGoSchedule) {
             Bundle b = new Bundle();
             b.putString(DataManager.SCHEDULE_TYPE_KEY, "Group");

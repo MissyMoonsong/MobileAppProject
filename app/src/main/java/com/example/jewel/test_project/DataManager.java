@@ -55,8 +55,7 @@ public class DataManager {
         user = new Person("Phone Owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
         groups = new HashMap<>();
 
-        //TODO: DOES THIS NEED TO BE HREE?
-        //refreshFromDatabase();
+        refreshFromDatabase();
     }
 
     public static DataManager Instance() {

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Jewel on 3/26/2017.
@@ -66,18 +67,10 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
 
         if (scheduleType.equals("User")) {
-             s = DataManager.Instance().getUser().getSchedule();
+            s = DataManager.Instance().getUser().getSchedule();
         } else if (scheduleType.equals("Group")) {
             groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-            Group g = DataManager.Instance().getGroups().get(groupKey);
-            if (g != null){
-                s = g.getGroupSchedule();
-            } else{
-                Toast.makeText(getApplicationContext(), "Invalid Group", Toast.LENGTH_LONG).show();
-
-                Intent i = new Intent(this, GroupMainPageActivity.class);
-                startActivity(i);
-            }
+            s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
         }
 
         events = s.getAllEvents();
