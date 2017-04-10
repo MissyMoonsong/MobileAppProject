@@ -7,6 +7,19 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+
+    <TextView
+        android:text="Register"
+        android:textSize="40dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"

@@ -27,7 +27,7 @@ import java.util.List;
  * to passwords are accidental
  */
 
-public class HomeMainPageActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeMainPageActivity extends AppCompatActivity {
 
 
     //Buttons
@@ -48,8 +48,6 @@ public class HomeMainPageActivity extends AppCompatActivity implements View.OnCl
         Firebase.setAndroidContext(this);
 
 
-        btnAdd = (Button) findViewById(R.id.btn_groupPage);
-        btnAdd.setOnClickListener(this);
 
         //menu
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -129,13 +127,6 @@ public class HomeMainPageActivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == btnAdd) {
-            Intent intent = new Intent(this, GroupMainPageActivity.class);
-            startActivity(intent);
-        }
-    }
 
     @Override
     public void onPause() {

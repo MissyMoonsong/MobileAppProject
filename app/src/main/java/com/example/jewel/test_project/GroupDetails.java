@@ -73,6 +73,7 @@ public class GroupDetails extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     DataManager.Instance().addOtherNameUserToGroup(myGroup.getGroupID(), name, ref, dataSnapshot);
+                                    Toast.makeText(getApplicationContext(), "Member Added", Toast.LENGTH_LONG).show();
                                 }
 
                                 @Override
