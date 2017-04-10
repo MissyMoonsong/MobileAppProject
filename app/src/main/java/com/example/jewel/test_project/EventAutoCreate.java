@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -17,7 +18,9 @@ import com.firebase.client.Firebase;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class EventAutoCreate extends AppCompatActivity {
+import static java.sql.Types.NULL;
+
+public class EventAutoCreate extends AppCompatActivity implements View.OnClickListener {
     String scheduleType, groupKey;
     Schedule schedule;
 
@@ -53,49 +56,8 @@ public class EventAutoCreate extends AppCompatActivity {
 
         Firebase.setAndroidContext(this);
 
-        btnGenerate.setOnClickListener(new View.OnClickListener() {
+        btnGenerate.setOnClickListener(this);
 
-            @Override
-            public void onClick(View v) {
-
-                //Get input values
-                String eventName = txtEventName.getText().toString();
-
-                int startYear = b_year;
-                int startMonth = b_month;
-                int startDay = b_day;
-
-                int endYear = e_year;
-                int endMonth = e_year;
-                int endDay = e_day;
-
-                int duration = Integer.parseInt(txtEventDuration.getText().toString());
-
-                //Generate an event this schedule
-                Calendar windowStart = new GregorianCalendar(startYear, startMonth, startDay);
-                Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
-
-                ScheduleEvent event = schedule.findTimeInSchedule(windowStart, windowEnd, duration);
-
-                if (event != null) { //Event Found
-                    event.changeName(eventName);
-                    //Creating firebase object
-                    Firebase ref = new Firebase(Config.FIREBASE_URL);
-
-                    //Check for network Connection
-                    boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
-
-                    if (networkConnection == true) {
-                        DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey, ref);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                //Go to list again
-                returnToList();
-            }
-        });
     }
 
     private void setViewsDate() {
@@ -118,6 +80,57 @@ public class EventAutoCreate extends AppCompatActivity {
         btnGenerate = (Button) findViewById(R.id.btn_auto_gen_event);
     }
 
+    @Override
+    public void onClick(View view) {
+        Bundle b = new Bundle();
+        b.putString(DataManager.SCHEDULE_TYPE_KEY, scheduleType);
+        b.putString(DataManager.GROUP_ID_KEY, groupKey);
+        if (view == btnGenerate) {
+            //Get input values
+            String eventName = txtEventName.getText().toString();
+
+            int startYear = b_year;
+            int startMonth = b_month;
+            int startDay = b_day;
+
+            int endYear = e_year;
+            int endMonth = e_year;
+            int endDay = e_day;
+
+            //Checking if duration is empty
+            String durationS = txtEventDuration.getText().toString().trim();
+            if (TextUtils.isEmpty(durationS)) {
+                Toast.makeText(this, "Please enter duration", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            int duration = Integer.parseInt(durationS);
+            //Generate an event this schedule
+            Calendar windowStart = new GregorianCalendar(startYear, startMonth, startDay);
+            Calendar windowEnd = new GregorianCalendar(endYear, endMonth, endDay);
+
+            ScheduleEvent event = schedule.findTimeInSchedule(windowStart, windowEnd, duration);
+
+            if (event != null) { //Event Found
+                event.changeName(eventName);
+                //Creating firebase object
+                Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+                //Check for network Connection
+                boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+                if (networkConnection == true) {
+                    DataManager.Instance().addUnpublishedEvent(event, scheduleType, groupKey, ref);
+                } else {
+                    Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            //Go to list again
+            returnToList();
+        }
+    }
+
     @SuppressWarnings("deprecation")
     public void setBeginDateAuto(View view) {
         showDialog(DATE_PICKER_BEGIN);
@@ -130,7 +143,7 @@ public class EventAutoCreate extends AppCompatActivity {
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        switch(id) {
+        switch (id) {
             //For Date
             case DATE_PICKER_BEGIN:
                 return new DatePickerDialog(this, beginDateListener, b_year, b_month, b_day);
