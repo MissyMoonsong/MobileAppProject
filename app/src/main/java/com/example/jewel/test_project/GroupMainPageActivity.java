@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -54,7 +55,16 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_group_main);
 
         Firebase.setAndroidContext(this);
-        DataManager.Instance().refreshFromDatabase(this);
+
+        //Check for network Connection
+        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+        if (networkConnection == true) {
+            //Refresh data
+            DataManager.Instance().refreshFromDatabase(this);
+        } else {
+            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+        }
 
         refresh();
 
