@@ -196,13 +196,6 @@ public class TodaysEventsActivity extends AppCompatActivity implements View.OnCl
         return result;
     }
 
-    @Override
-    public void onPause() {
-        //End activity if the user leaves the app
-        super.onPause();
-        finish();
-    }
-
     //menu
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

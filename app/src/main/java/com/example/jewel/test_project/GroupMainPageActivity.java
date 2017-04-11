@@ -201,13 +201,6 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
-    public void onPause() {
-        //End activity if the user leaves the app
-        super.onPause();
-        finish();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
     }

@@ -249,13 +249,6 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onPause() {
-        //End activity if the user leaves the app
-        super.onPause();
-        finish();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         //Put in the onStop of anything use the shake event!
