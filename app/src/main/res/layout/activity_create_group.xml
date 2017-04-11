@@ -34,7 +34,7 @@
         android:inputType="textPersonName"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/group_create_name_placeholder"
+        android:hint="Group Name"
         app:layout_constraintBottom_toTopOf="@+id/btn_create_group"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

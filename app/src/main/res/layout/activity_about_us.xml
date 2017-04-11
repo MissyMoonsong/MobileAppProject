@@ -24,10 +24,88 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_us_text" />
+            android:text="About Us"
+            android:textSize="30dp"
+            android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:text="This app was made Spring 2017 for CSE 5236: Mobile Applciation Development at The Ohio State University."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Made By:"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Allison Galuska" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Email: galuska.3@osu.edu"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Jamie Silva"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Email: silva.116@osu.edu"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Gwen Stevens"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Email: stevens.826@osu.edu"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_marginTop="20dp"
+            android:text="Found Bug?"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:layout_marginTop="10dp"
+            android:text="Please Email: GroupSchedulerAppBugs@gmail.com"/>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>
