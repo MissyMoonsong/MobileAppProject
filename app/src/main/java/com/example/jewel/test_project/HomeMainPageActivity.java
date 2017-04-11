@@ -27,7 +27,7 @@ import java.util.List;
  * to passwords are accidental
  */
 
-public class HomeMainPageActivity extends AppCompatActivity {
+public class HomeMainPageActivity extends AppCompatActivity implements Refreshable {
 
 
     //Buttons
@@ -44,10 +44,8 @@ public class HomeMainPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        DataManager.Instance().refreshFromDatabase();
         Firebase.setAndroidContext(this);
-
-
+        DataManager.Instance().refreshFromDatabase(this);
 
         //menu
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -59,6 +57,10 @@ public class HomeMainPageActivity extends AppCompatActivity {
         setupDrawer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    public void refresh(){
+        //Nothing to do
     }
 
     //For menu

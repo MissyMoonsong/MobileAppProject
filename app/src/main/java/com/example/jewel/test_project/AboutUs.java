@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class AboutUs extends AppCompatActivity implements View.OnClickListener{
+public class AboutUs extends AppCompatActivity implements View.OnClickListener, Refreshable{
     //for the menu
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -27,7 +27,7 @@ public class AboutUs extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
 
-        DataManager.Instance().refreshFromDatabase();
+        DataManager.Instance().refreshFromDatabase(this);
 
         //menu
         mDrawerList = (ListView)findViewById(R.id.navList);
@@ -41,6 +41,10 @@ public class AboutUs extends AppCompatActivity implements View.OnClickListener{
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    public void refresh(){
+        //Nothing to do
     }
 
     private void addDrawerItems() {

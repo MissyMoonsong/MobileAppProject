@@ -32,7 +32,7 @@ import java.util.List;
  * to passwords are accidental
  */
 
-public class GroupMainPageActivity extends AppCompatActivity implements View.OnClickListener {
+public class GroupMainPageActivity extends AppCompatActivity implements View.OnClickListener, Refreshable {
 
     //List of events that will be displayed
     private List<Group> groups = new ArrayList<>();
@@ -54,10 +54,9 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_group_main);
 
         Firebase.setAndroidContext(this);
+        DataManager.Instance().refreshFromDatabase(this);
 
-        groups = new ArrayList<>(DataManager.Instance().getGroups().values());
-
-        fillList();
+        refresh();
 
         //Set the listener for clicking an item
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -91,6 +90,11 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
         setupDrawer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    public void refresh(){
+        groups = new ArrayList<>(DataManager.Instance().getGroups().values());
+        fillList();
     }
 
     //For menu

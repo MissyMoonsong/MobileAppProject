@@ -33,7 +33,7 @@ import java.util.Map;
  * to passwords are accidental
  */
 
-public class EventListViewer extends AppCompatActivity implements View.OnClickListener {
+public class EventListViewer extends AppCompatActivity implements View.OnClickListener, Refreshable {
 
     //List of events that will be displayed
     private List<ScheduleEvent> events = new ArrayList<>();
@@ -63,19 +63,12 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.event_list_view);
 
         Firebase.setAndroidContext(this);
+        DataManager.Instance().refreshFromDatabase(this);
 
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
+        groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
 
-        if (scheduleType.equals("User")) {
-            s = DataManager.Instance().getUser().getSchedule();
-        } else if (scheduleType.equals("Group")) {
-            groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
-            s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
-        }
-
-        events = s.getAllEvents();
-
-        fillList();
+        refresh();
 
         //Set the listener for clicking an item
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,6 +119,18 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
                 shakeResponse();
             }
         });
+    }
+
+    public void refresh(){
+        if (scheduleType.equals("User")) {
+            s = DataManager.Instance().getUser().getSchedule();
+        } else if (scheduleType.equals("Group")) {
+            s = DataManager.Instance().getGroups().get(groupKey).getGroupSchedule();
+        }
+
+        events = s.getAllEvents();
+
+        fillList();
     }
 
     //for menu

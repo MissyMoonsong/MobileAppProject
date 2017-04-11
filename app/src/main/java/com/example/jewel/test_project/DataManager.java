@@ -36,7 +36,7 @@ import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.N
  * It stores all schedules in Key, Value pairs
  */
 
-public class DataManager {
+public class DataManager implements Refreshable{
     private static DataManager instance;
     //These two objects are used to format the Calendar.getDate() objects into readable strings
     public static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
@@ -45,8 +45,6 @@ public class DataManager {
     public static String SCHEDULE_TYPE_KEY = "ScheduleType"; //User or Group
     public static String GROUP_ID_KEY = "GroupID"; //key to access correct Group
     public static String EVENT_ID_KEY = "EventID"; //key to access correct Event
-    //Temporary variables
-    private static int nextEventID = 1, nextGroupID = 1, nextUserID = 0;
 
     private Person user;
     private Map<String, Group> groups;
@@ -55,7 +53,11 @@ public class DataManager {
         user = new Person("Phone Owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
         groups = new HashMap<>();
 
-        refreshFromDatabase();
+        refreshFromDatabase(this);
+    }
+
+    public void refresh(){
+        //Do nothing -- must implement the interface to call DB refresh method
     }
 
     public static DataManager Instance() {
@@ -331,7 +333,7 @@ public class DataManager {
         }
     }
 
-    public void refreshFromDatabase(){
+    public void refreshFromDatabase(final Refreshable caller){
         groups = new HashMap<>();
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -341,6 +343,7 @@ public class DataManager {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         refreshWithSnap(dataSnapshot);
+                        caller.refresh();
                     }
 
                     @Override
