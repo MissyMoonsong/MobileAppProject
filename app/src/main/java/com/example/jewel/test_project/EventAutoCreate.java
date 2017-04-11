@@ -94,7 +94,7 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
             int startDay = b_day;
 
             int endYear = e_year;
-            int endMonth = e_year;
+            int endMonth = e_month;
             int endDay = e_day;
 
             //Checking if duration is empty

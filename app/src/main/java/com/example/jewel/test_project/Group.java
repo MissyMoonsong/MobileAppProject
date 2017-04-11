@@ -42,9 +42,9 @@ public class Group {
         //Adds a reference to each event in the person's schedule to the group schedule
         for(ScheduleEvent e : ps.getAllEvents()){
             //Check for if the event is already in the group schedule from another user
-            //if(groupSchedule.findEventByID(e.getEventID()) != null){
+            if(groupSchedule.findEventByID(e.getEventID()) == null){
                 groupSchedule.addEvent(e);
-            //}
+            }
         }
     }
 

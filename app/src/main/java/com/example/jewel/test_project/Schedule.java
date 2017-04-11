@@ -78,6 +78,10 @@ public class Schedule {
                 temp = (Calendar)temp.clone();
                 //Increment day
                 temp.add(Calendar.DAY_OF_MONTH, 1);
+
+                //Debug
+                //String tempStr = DataManager.DATE_FORMATTER.format(temp.getTime());
+                //String endStr = DataManager.DATE_FORMATTER.format(windowEnd.getTime());
             }
         }
 
@@ -95,7 +99,6 @@ public class Schedule {
 
             if(open != null){
                 //Suitable event was found
-                //TODO: Consider collecting more possible slots?
                 break;
             }
         }
