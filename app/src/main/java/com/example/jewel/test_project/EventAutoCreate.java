@@ -2,6 +2,7 @@ package com.example.jewel.test_project;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -70,8 +71,8 @@ public class EventAutoCreate extends AppCompatActivity implements View.OnClickLi
         e_year = calendar.get(Calendar.YEAR);
         e_month = calendar.get(Calendar.MONTH);
         e_day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDateBegin(b_year, b_month + 1, b_day);
-        showDateEnd(e_year, e_month + 1, e_day);
+        showDateBegin(b_month + 1, b_day, b_year);
+        showDateEnd(e_month + 1, e_day, e_year);
     }
 
     private void setViewsOther() {

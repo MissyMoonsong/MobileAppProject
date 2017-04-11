@@ -113,8 +113,8 @@ public class CreateEvent extends AppCompatActivity {
         e_year = calendar.get(Calendar.YEAR);
         e_month = calendar.get(Calendar.MONTH);
         e_day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDateBegin(b_year, b_month + 1, b_day);
-        showDateEnd(e_year, e_month + 1, e_day);
+        showDateBegin(b_month + 1, b_day, b_year);
+        showDateEnd(e_month + 1, e_day, e_year);
     }
 
     private void setViewsTime() {
