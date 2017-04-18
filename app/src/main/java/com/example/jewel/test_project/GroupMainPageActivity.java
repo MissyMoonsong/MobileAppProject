@@ -61,7 +61,7 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
 
         if (networkConnection == true) {
             //Refresh data
-            DataManager.Instance().refreshFromDatabase(this);
+            //DataManager.Instance().refreshFromDatabase(this);
         } else {
             Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
         }
