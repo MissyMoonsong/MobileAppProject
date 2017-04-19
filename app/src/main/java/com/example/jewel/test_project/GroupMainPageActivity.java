@@ -56,16 +56,6 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
 
         Firebase.setAndroidContext(this);
 
-        //Check for network Connection
-        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
-
-        if (networkConnection == true) {
-            //Refresh data
-            //DataManager.Instance().refreshFromDatabase(this);
-        } else {
-            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
-        }
-
         refresh();
 
         //Set the listener for clicking an item
@@ -100,6 +90,17 @@ public class GroupMainPageActivity extends AppCompatActivity implements View.OnC
         setupDrawer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+
+        //Check for network Connection
+        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+        if (networkConnection == true) {
+            //Refresh data
+            DataManager.Instance().refreshFromDatabase(this);
+        } else {
+            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void refresh(){

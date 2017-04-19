@@ -67,16 +67,6 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
         scheduleType = getIntent().getExtras().getString(DataManager.SCHEDULE_TYPE_KEY);
         groupKey = getIntent().getExtras().getString(DataManager.GROUP_ID_KEY);
 
-        //Check for network Connection
-        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
-
-        if (networkConnection == true) {
-            //Refresh data
-            //DataManager.Instance().refreshFromDatabase(this);
-        } else {
-            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
-        }
-
         refresh();
 
         //Set the listener for clicking an item
@@ -128,6 +118,17 @@ public class EventListViewer extends AppCompatActivity implements View.OnClickLi
                 shakeResponse();
             }
         });
+
+
+        //Check for network Connection
+        boolean networkConnection = DataManager.Instance().haveConnection(getApplicationContext());
+
+        if (networkConnection == true) {
+            //Refresh data
+            DataManager.Instance().refreshFromDatabase(this);
+        } else {
+            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void refresh(){
